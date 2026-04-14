@@ -85,6 +85,44 @@
   .form-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
   .form-note { text-align: center; color: var(--muted); font-size: 0.82rem; margin-top: 0.75rem; }
 
+  /* ── Inventory Section ── */
+  .inventory-section { background: var(--dark2); }
+  .inventory-filters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+  .filter-btn { background: transparent; border: 1px solid rgba(255,255,255,0.12); color: var(--muted); padding: 0.45rem 1.1rem; border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .filter-btn:hover, .filter-btn.active { background: var(--gold); border-color: var(--gold); color: var(--dark); }
+  .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.5rem; }
+  .vehicle-card { background: var(--dark); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s, transform 0.2s; display: flex; flex-direction: column; }
+  .vehicle-card:hover { border-color: rgba(201,168,76,0.35); transform: translateY(-3px); }
+  .vehicle-img { height: 175px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .vehicle-img .vehicle-emoji { font-size: 5rem; filter: drop-shadow(0 4px 24px rgba(0,0,0,0.5)); z-index: 1; }
+  .vehicle-img-bg { position: absolute; inset: 0; }
+  .vehicle-card[data-cat="truck"] .vehicle-img-bg { background: linear-gradient(135deg, #0f1c2e 0%, #1a2f4a 60%, #0d1f35 100%); }
+  .vehicle-card[data-cat="suv"] .vehicle-img-bg { background: linear-gradient(135deg, #1a1200 0%, #2e1f00 60%, #1a1200 100%); }
+  .vehicle-card[data-cat="suv-full"] .vehicle-img-bg { background: linear-gradient(135deg, #0d1a0d 0%, #1a2e1a 60%, #0d1a0d 100%); }
+  .vehicle-card[data-cat="compact"] .vehicle-img-bg { background: linear-gradient(135deg, #1a001a 0%, #2e002e 60%, #1a001a 100%); }
+  .vehicle-body { padding: 1.4rem 1.4rem 0; flex: 1; }
+  .vehicle-cat { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 2px; margin-bottom: 0.6rem; }
+  .vehicle-cat.truck { background: rgba(24,100,242,0.15); color: #6ab0ff; }
+  .vehicle-cat.suv { background: rgba(201,168,76,0.15); color: var(--gold); }
+  .vehicle-cat.suv-full { background: rgba(46,180,80,0.15); color: #6edd8a; }
+  .vehicle-cat.compact { background: rgba(180,46,120,0.15); color: #e87fd0; }
+  .vehicle-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.04em; line-height: 1; margin-bottom: 0.25rem; }
+  .vehicle-tagline { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+  .vehicle-highlights { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1.1rem; }
+  .vehicle-highlights li { font-size: 0.88rem; color: var(--muted); display: flex; align-items: center; gap: 0.5rem; }
+  .vehicle-highlights li::before { content: '✓'; color: var(--gold); font-weight: 700; font-size: 0.8rem; flex-shrink: 0; }
+  .vehicle-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.35rem; color: var(--text); letter-spacing: 0.04em; }
+  .vehicle-price span { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; color: var(--muted); font-weight: 400; letter-spacing: 0; vertical-align: middle; margin-left: 0.3rem; }
+  .vehicle-footer { padding: 1rem 1.4rem 1.4rem; display: flex; gap: 0.6rem; }
+  .btn-interested { flex: 1; background: var(--gold); color: var(--dark); border: none; padding: 0.7rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 700; border-radius: var(--radius); cursor: pointer; transition: background 0.2s; letter-spacing: 0.02em; }
+  .btn-interested:hover { background: var(--gold-light); }
+  .btn-more { background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,0.12); padding: 0.7rem 0.9rem; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; transition: border-color 0.2s, color 0.2s; text-decoration: none; display: inline-flex; align-items: center; }
+  .btn-more:hover { border-color: var(--gold); color: var(--gold); }
+  .inventory-footer { text-align: center; margin-top: 2.5rem; }
+  .inventory-footer p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
+  .btn-full-inventory { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid rgba(201,168,76,0.4); color: var(--gold); padding: 0.85rem 2rem; border-radius: var(--radius); text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: background 0.2s, border-color 0.2s; }
+  .btn-full-inventory:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+
   /* ── Social Section ── */
   .social-section { background: var(--dark); }
   .social-platforms { display: flex; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap; }
@@ -147,6 +185,7 @@
     .reels-grid { grid-template-columns: repeat(2, 1fr); }
     .social-cta-bar { flex-direction: column; text-align: center; }
     .social-cta-btns { justify-content: center; }
+    .inventory-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -156,6 +195,7 @@
   <div class="nav-logo">Keys<span>withOG</span></div>
   <div class="nav-links">
     <a href="#services">What I Offer</a>
+    <a href="#inventory">Inventory</a>
     <a href="#about">About Oscar</a>
     <a href="#programs">Programs</a>
     <a href="#social">Follow Oscar</a>
@@ -178,6 +218,161 @@
       <div><div class="stat-num">100%</div><div class="stat-label">Satisfaction</div></div>
       <div><div class="stat-num">$3K+</div><div class="stat-label">Referrals Paid Out</div></div>
     </div>
+  </div>
+</section>
+
+<section id="inventory" class="inventory-section">
+  <div class="section-label">Current Lineup</div>
+  <div class="section-title">Browse the Inventory</div>
+  <p class="section-sub">See something you like? Hit "I'm Interested" and Oscar will reach out to you directly with availability, pricing, and next steps.</p>
+
+  <div class="inventory-filters">
+    <button class="filter-btn active" onclick="filterInventory('all', this)">All Vehicles</button>
+    <button class="filter-btn" onclick="filterInventory('truck', this)">Trucks</button>
+    <button class="filter-btn" onclick="filterInventory('suv', this)">SUVs</button>
+    <button class="filter-btn" onclick="filterInventory('suv-full', this)">Full-Size</button>
+    <button class="filter-btn" onclick="filterInventory('compact', this)">Compact</button>
+  </div>
+
+  <div class="inventory-grid" id="inventoryGrid">
+
+    <div class="vehicle-card" data-cat="truck">
+      <div class="vehicle-img">
+        <div class="vehicle-img-bg"></div>
+        <div class="vehicle-emoji">🛻</div>
+      </div>
+      <div class="vehicle-body">
+        <div class="vehicle-cat truck">Truck</div>
+        <div class="vehicle-name">Silverado 1500</div>
+        <div class="vehicle-tagline">Most capable half-ton on the market</div>
+        <ul class="vehicle-highlights">
+          <li>Up to 13,300 lb towing capacity</li>
+          <li>Multiple engine options incl. Duramax Diesel</li>
+          <li>Available MultiPro tailgate</li>
+        </ul>
+        <div class="vehicle-price">From $36,900 <span>MSRP</span></div>
+      </div>
+      <div class="vehicle-footer">
+        <button class="btn-interested" onclick="showInterest('Chevrolet Silverado (Truck)')">I'm Interested →</button>
+        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">See Lot</a>
+      </div>
+    </div>
+
+    <div class="vehicle-card" data-cat="truck">
+      <div class="vehicle-img">
+        <div class="vehicle-img-bg"></div>
+        <div class="vehicle-emoji">🛻</div>
+      </div>
+      <div class="vehicle-body">
+        <div class="vehicle-cat truck">Truck</div>
+        <div class="vehicle-name">Colorado</div>
+        <div class="vehicle-tagline">Mid-size muscle, full-size capability</div>
+        <ul class="vehicle-highlights">
+          <li>Up to 7,700 lb towing capacity</li>
+          <li>Available ZR2 off-road package</li>
+          <li>Best-in-class horsepower</li>
+        </ul>
+        <div class="vehicle-price">From $28,300 <span>MSRP</span></div>
+      </div>
+      <div class="vehicle-footer">
+        <button class="btn-interested" onclick="showInterest('Chevrolet Colorado (Mid-Size Truck)')">I'm Interested →</button>
+        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">See Lot</a>
+      </div>
+    </div>
+
+    <div class="vehicle-card" data-cat="suv">
+      <div class="vehicle-img">
+        <div class="vehicle-img-bg"></div>
+        <div class="vehicle-emoji">🚙</div>
+      </div>
+      <div class="vehicle-body">
+        <div class="vehicle-cat suv">SUV</div>
+        <div class="vehicle-name">Equinox</div>
+        <div class="vehicle-tagline">America's best-selling compact SUV</div>
+        <ul class="vehicle-highlights">
+          <li>Up to 32 MPG highway</li>
+          <li>Standard safety & driver assist tech</li>
+          <li>Available AWD</li>
+        </ul>
+        <div class="vehicle-price">From $28,600 <span>MSRP</span></div>
+      </div>
+      <div class="vehicle-footer">
+        <button class="btn-interested" onclick="showInterest('Chevrolet Equinox (SUV)')">I'm Interested →</button>
+        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">See Lot</a>
+      </div>
+    </div>
+
+    <div class="vehicle-card" data-cat="suv">
+      <div class="vehicle-img">
+        <div class="vehicle-img-bg"></div>
+        <div class="vehicle-emoji">🚙</div>
+      </div>
+      <div class="vehicle-body">
+        <div class="vehicle-cat suv">SUV</div>
+        <div class="vehicle-name">Blazer</div>
+        <div class="vehicle-tagline">Bold sport style meets smart utility</div>
+        <ul class="vehicle-highlights">
+          <li>Available RS and SS performance trims</li>
+          <li>11.3" diagonal infotainment screen</li>
+          <li>Available AWD with traction modes</li>
+        </ul>
+        <div class="vehicle-price">From $35,000 <span>MSRP</span></div>
+      </div>
+      <div class="vehicle-footer">
+        <button class="btn-interested" onclick="showInterest('Chevrolet Blazer')">I'm Interested →</button>
+        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">See Lot</a>
+      </div>
+    </div>
+
+    <div class="vehicle-card" data-cat="suv-full">
+      <div class="vehicle-img">
+        <div class="vehicle-img-bg"></div>
+        <div class="vehicle-emoji">🚐</div>
+      </div>
+      <div class="vehicle-body">
+        <div class="vehicle-cat suv-full">Full-Size SUV</div>
+        <div class="vehicle-name">Tahoe</div>
+        <div class="vehicle-tagline">Full-size power for the whole family</div>
+        <ul class="vehicle-highlights">
+          <li>Seats up to 9 passengers</li>
+          <li>Up to 8,400 lb towing capacity</li>
+          <li>Available Duramax Diesel engine</li>
+        </ul>
+        <div class="vehicle-price">From $56,200 <span>MSRP</span></div>
+      </div>
+      <div class="vehicle-footer">
+        <button class="btn-interested" onclick="showInterest('Chevrolet Tahoe / Suburban')">I'm Interested →</button>
+        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">See Lot</a>
+      </div>
+    </div>
+
+    <div class="vehicle-card" data-cat="compact">
+      <div class="vehicle-img">
+        <div class="vehicle-img-bg"></div>
+        <div class="vehicle-emoji">🚗</div>
+      </div>
+      <div class="vehicle-body">
+        <div class="vehicle-cat compact">Compact SUV</div>
+        <div class="vehicle-name">Trax</div>
+        <div class="vehicle-tagline">Bold looks, smart price — perfect starter</div>
+        <ul class="vehicle-highlights">
+          <li>Up to 32 MPG highway</li>
+          <li>11" diagonal infotainment screen standard</li>
+          <li>Most affordable new Chevy SUV</li>
+        </ul>
+        <div class="vehicle-price">From $20,400 <span>MSRP</span></div>
+      </div>
+      <div class="vehicle-footer">
+        <button class="btn-interested" onclick="showInterest('Chevrolet Malibu / Trax (Sedan/Car)')">I'm Interested →</button>
+        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">See Lot</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="inventory-footer">
+    <p>Don't see the exact trim or color you want? Oscar has access to the full lot.</p>
+    <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-full-inventory">View Full Inventory at Price Chevy →</a>
   </div>
 </section>
 
@@ -317,7 +512,7 @@
 
 <div class="phone-bar">
   <span>Ready to talk? Call Oscar directly —</span>
-  <a href="tel:12102602489">1-210-260-2489</a>
+  <a href="tel:12102602489">(210)-260-2489</a>
   <span>Mon–Fri 8am–7pm · Sat 9am–6pm</span>
 </div>
 
@@ -379,7 +574,7 @@
     </div>
     <div class="footer-col">
       <h4>Contact</h4>
-      <a href="tel:12102602489">1-210-260-2489</a>
+      <a href="tel:12102602489">(210)-260-2489</a>
       <a href="mailto:o_gonzalez1@icloud.com">o_gonzalez1@icloud.com</a>
       <a href="https://www.facebook.com/profile.php?id=100043055113777" target="_blank">Facebook</a>
       <p style="margin-top: 0.75rem; font-size: 0.85rem;">2035 W Oaklawn Rd<br>Pleasanton, TX 78064</p>
@@ -403,6 +598,26 @@ function handleSubmit() {
   btn.textContent = '✅ Sent! Oscar will reach out shortly.';
   btn.style.background = '#2ECC71';
   btn.style.cursor = 'default';
+}
+
+function showInterest(vehicleName) {
+  const select = document.getElementById('interest');
+  for (let i = 0; i < select.options.length; i++) {
+    if (select.options[i].text === vehicleName) {
+      select.selectedIndex = i;
+      break;
+    }
+  }
+  document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+  setTimeout(() => document.getElementById('fname').focus(), 600);
+}
+
+function filterInventory(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.vehicle-card').forEach(card => {
+    card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'flex' : 'none';
+  });
 }
 </script>
 </body>
