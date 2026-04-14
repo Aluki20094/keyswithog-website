@@ -93,13 +93,10 @@
   .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.5rem; }
   .vehicle-card { background: var(--dark); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s, transform 0.2s; display: flex; flex-direction: column; }
   .vehicle-card:hover { border-color: rgba(201,168,76,0.35); transform: translateY(-3px); }
-  .vehicle-img { height: 175px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-  .vehicle-img .vehicle-emoji { font-size: 5rem; filter: drop-shadow(0 4px 24px rgba(0,0,0,0.5)); z-index: 1; }
-  .vehicle-img-bg { position: absolute; inset: 0; }
-  .vehicle-card[data-cat="truck"] .vehicle-img-bg { background: linear-gradient(135deg, #0f1c2e 0%, #1a2f4a 60%, #0d1f35 100%); }
-  .vehicle-card[data-cat="suv"] .vehicle-img-bg { background: linear-gradient(135deg, #1a1200 0%, #2e1f00 60%, #1a1200 100%); }
-  .vehicle-card[data-cat="suv-full"] .vehicle-img-bg { background: linear-gradient(135deg, #0d1a0d 0%, #1a2e1a 60%, #0d1a0d 100%); }
-  .vehicle-card[data-cat="compact"] .vehicle-img-bg { background: linear-gradient(135deg, #1a001a 0%, #2e002e 60%, #1a001a 100%); }
+  .vehicle-img { height: 195px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: #111; }
+  .vehicle-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.4s ease; }
+  .vehicle-card:hover .vehicle-img img { transform: scale(1.04); }
+  .vehicle-img-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 55%); z-index: 1; pointer-events: none; }
   .vehicle-body { padding: 1.4rem 1.4rem 0; flex: 1; }
   .vehicle-cat { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 2px; margin-bottom: 0.6rem; }
   .vehicle-cat.truck { background: rgba(24,100,242,0.15); color: #6ab0ff; }
@@ -238,8 +235,8 @@
 
     <div class="vehicle-card" data-cat="truck">
       <div class="vehicle-img">
-        <div class="vehicle-img-bg"></div>
-        <div class="vehicle-emoji">🛻</div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/2020_Chevrolet_Silverado_1500_High_Country%2C_front_10.25.20.jpg/800px-2020_Chevrolet_Silverado_1500_High_Country%2C_front_10.25.20.jpg" alt="2025 Chevrolet Silverado 1500" loading="lazy" />
+        <div class="vehicle-img-overlay"></div>
       </div>
       <div class="vehicle-body">
         <div class="vehicle-cat truck">Truck</div>
@@ -260,8 +257,8 @@
 
     <div class="vehicle-card" data-cat="truck">
       <div class="vehicle-img">
-        <div class="vehicle-img-bg"></div>
-        <div class="vehicle-emoji">🛻</div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/2024_Chevrolet_Colorado_Z71%2C_front_left%2C_09-28-2024.jpg/800px-2024_Chevrolet_Colorado_Z71%2C_front_left%2C_09-28-2024.jpg" alt="2025 Chevrolet Colorado" loading="lazy" />
+        <div class="vehicle-img-overlay"></div>
       </div>
       <div class="vehicle-body">
         <div class="vehicle-cat truck">Truck</div>
@@ -282,8 +279,8 @@
 
     <div class="vehicle-card" data-cat="suv">
       <div class="vehicle-img">
-        <div class="vehicle-img-bg"></div>
-        <div class="vehicle-emoji">🚙</div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/2025_Chevrolet_Equinox%2C_front_12.10.24.jpg/800px-2025_Chevrolet_Equinox%2C_front_12.10.24.jpg" alt="2025 Chevrolet Equinox" loading="lazy" />
+        <div class="vehicle-img-overlay"></div>
       </div>
       <div class="vehicle-body">
         <div class="vehicle-cat suv">SUV</div>
@@ -304,8 +301,8 @@
 
     <div class="vehicle-card" data-cat="suv">
       <div class="vehicle-img">
-        <div class="vehicle-img-bg"></div>
-        <div class="vehicle-emoji">🚙</div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/2023_Chevrolet_Blazer_RS.jpg/800px-2023_Chevrolet_Blazer_RS.jpg" alt="2025 Chevrolet Blazer" loading="lazy" />
+        <div class="vehicle-img-overlay"></div>
       </div>
       <div class="vehicle-body">
         <div class="vehicle-cat suv">SUV</div>
@@ -326,8 +323,8 @@
 
     <div class="vehicle-card" data-cat="suv-full">
       <div class="vehicle-img">
-        <div class="vehicle-img-bg"></div>
-        <div class="vehicle-emoji">🚐</div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/2021_Chevrolet_Tahoe_High_Country%2C_front_12.24.20.jpg/800px-2021_Chevrolet_Tahoe_High_Country%2C_front_12.24.20.jpg" alt="2025 Chevrolet Tahoe" loading="lazy" />
+        <div class="vehicle-img-overlay"></div>
       </div>
       <div class="vehicle-body">
         <div class="vehicle-cat suv-full">Full-Size SUV</div>
@@ -348,8 +345,8 @@
 
     <div class="vehicle-card" data-cat="compact">
       <div class="vehicle-img">
-        <div class="vehicle-img-bg"></div>
-        <div class="vehicle-emoji">🚗</div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/2024_Chevrolet_Trax_2RS%2C_front_left%2C_12-10-2023.jpg/800px-2024_Chevrolet_Trax_2RS%2C_front_left%2C_12-10-2023.jpg" alt="2025 Chevrolet Trax" loading="lazy" />
+        <div class="vehicle-img-overlay"></div>
       </div>
       <div class="vehicle-body">
         <div class="vehicle-cat compact">Compact SUV</div>
