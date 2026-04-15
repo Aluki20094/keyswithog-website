@@ -55,7 +55,8 @@
   @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
   .why-visual { background: var(--dark2); border: 1px solid rgba(26,82,212,0.25); border-radius: var(--radius); padding: 3rem 2.5rem; text-align: center; }
-  .avatar-ring { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--blue-dark)); margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; color: #fff; letter-spacing: 0.05em; }
+  .avatar-ring { width: 120px; height: 120px; border-radius: 50%; background: #fff; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 3px solid rgba(26,82,212,0.3); }
+  .avatar-ring img { width: 100%; height: 100%; object-fit: contain; }
   .why-visual h3 { font-size: 1.3rem; margin-bottom: 0.3rem; }
   .why-visual .title-line { color: var(--blue); font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; }
   .why-visual .dealer { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
@@ -203,10 +204,11 @@
   .popup-close:hover { background: rgba(255,255,255,0.14); color: var(--text); }
   .popup-avatar {
     width: 72px; height: 72px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--gold), #8a5c1e);
+    background: #fff; border: 2px solid rgba(26,82,212,0.3);
     margin: 0 auto 1.25rem; display: flex; align-items: center; justify-content: center;
-    font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--dark);
+    overflow: hidden;
   }
+  .popup-avatar img { width: 100%; height: 100%; object-fit: contain; }
   .popup-screen { display: none; text-align: center; }
   .popup-screen.active { display: block; }
   .popup-screen h2 {
@@ -276,7 +278,46 @@
     .social-cta-btns { justify-content: center; }
     .inventory-grid { grid-template-columns: 1fr; }
     .popup-box { padding: 2rem 1.5rem 1.5rem; }
+    .reels-embed-grid { grid-template-columns: 1fr; }
   }
+
+  /* ── Light Mode ── */
+  html.light-mode {
+    --dark: #F2F2F2; --dark2: #E8E8E8; --dark3: #DEDEDE;
+    --text: #0A0A0A; --muted: #575350;
+  }
+  html.light-mode nav { background: rgba(242,242,242,0.96) !important; border-bottom-color: rgba(26,82,212,0.18) !important; }
+  html.light-mode .nav-links a { color: var(--muted); }
+  html.light-mode .hero-bg::after { background: linear-gradient(90deg, rgba(242,242,242,0.93) 0%, rgba(242,242,242,0.78) 55%, rgba(242,242,242,0.35) 100%); }
+  html.light-mode .hero h1 { color: var(--text); }
+  html.light-mode .hero p { color: var(--muted); }
+  html.light-mode .hero-stats { border-top-color: rgba(0,0,0,0.1); }
+  html.light-mode .card { border-color: rgba(0,0,0,0.09); }
+  html.light-mode .vehicle-card { border-color: rgba(0,0,0,0.09); }
+  html.light-mode .platform-card { border-color: rgba(0,0,0,0.1) !important; }
+  html.light-mode .reel-card { border-color: rgba(0,0,0,0.1); }
+  html.light-mode input, html.light-mode select, html.light-mode textarea { background: #fff; border-color: rgba(0,0,0,0.14); color: var(--text); }
+  html.light-mode input::placeholder, html.light-mode textarea::placeholder { color: #aaa; }
+  html.light-mode .popup-box { background: #fff; border-color: rgba(26,82,212,0.25); }
+  html.light-mode .popup-close { background: rgba(0,0,0,0.07); }
+  html.light-mode footer { background: #D8D8D8; }
+
+  /* ── Theme Toggle ── */
+  .theme-toggle {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text); width: 36px; height: 36px; border-radius: 50%;
+    cursor: pointer; font-size: 1.1rem; display: flex; align-items: center;
+    justify-content: center; transition: background 0.2s; margin-left: 0.25rem; flex-shrink: 0;
+  }
+  .theme-toggle:hover { background: rgba(255,255,255,0.14); }
+  html.light-mode .theme-toggle { background: rgba(0,0,0,0.07); border-color: rgba(0,0,0,0.12); }
+
+  /* ── Instagram Reel Embeds ── */
+  .reels-embed-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+    max-width: 960px; margin: 0 auto 3rem; align-items: start;
+  }
+  .reels-embed-grid .instagram-media { width: 100% !important; max-width: 100% !important; min-width: 0 !important; margin: 0 !important; }
 </style>
 </head>
 <body>
@@ -289,7 +330,7 @@
     <button class="popup-close" onclick="closePopup()" aria-label="Close">✕</button>
 
     <div id="screenQuestion" class="popup-screen active">
-      <div class="popup-avatar">OG</div>
+      <div class="popup-avatar"><img src="images/og-logo.png" alt="Keys with OG" /></div>
       <h2>Hey, <em>welcome!</em></h2>
       <p>Before you look around — have you done business with Oscar before?</p>
       <div class="popup-btn-group">
@@ -301,7 +342,7 @@
     <!-- Screen 2a: Welcome Back -->
     <div id="screenWelcomeBack" class="popup-screen">
       <div class="popup-welcome-badge">★ Returning Customer</div>
-      <div class="popup-avatar">OG</div>
+      <div class="popup-avatar"><img src="images/og-logo.png" alt="Keys with OG" /></div>
       <h2><em>Welcome Back!</em></h2>
       <div class="popup-divider"></div>
       <p>Great to see you again. Oscar appreciates your trust — ready to find your next ride or refer a friend for that <strong style="color:var(--gold);">$100 bonus?</strong></p>
@@ -355,12 +396,13 @@
   <div class="nav-logo">Keys<span>withOG</span></div>
   <div class="nav-links">
     <a href="#services">What I Offer</a>
-    <a href="#inventory">Inventory</a>
-    <a href="#about">About Oscar</a>
+    <a href="#about">Why Oscar</a>
     <a href="#programs">Programs</a>
-    <a href="#social">Follow Oscar</a>
+    <a href="#inventory">Inventory</a>
+    <a href="#social">Reels</a>
     <a href="#contact" class="nav-cta">Get in Touch</a>
   </div>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" title="Toggle theme">☀</button>
 </nav>
 
 <section class="hero">
@@ -378,6 +420,68 @@
       <div><div class="stat-num">100%</div><div class="stat-label">Satisfaction</div></div>
       <div><div class="stat-num">$3K+</div><div class="stat-label">Referrals Paid Out</div></div>
     </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">New Chevrolet Inventory</span>
+    <span class="marquee-item">First-Time Buyer Friendly</span>
+    <span class="marquee-item">All Credit Situations Welcome</span>
+    <span class="marquee-item">Top Dollar for Trade-Ins</span>
+    <span class="marquee-item">$100 Referral Bonus</span>
+    <span class="marquee-item">Pleasanton, TX</span>
+    <span class="marquee-item">New Chevrolet Inventory</span>
+    <span class="marquee-item">First-Time Buyer Friendly</span>
+    <span class="marquee-item">All Credit Situations Welcome</span>
+    <span class="marquee-item">Top Dollar for Trade-Ins</span>
+    <span class="marquee-item">$100 Referral Bonus</span>
+    <span class="marquee-item">Pleasanton, TX</span>
+  </div>
+</div>
+
+<section id="services">
+  <div class="section-label">What I Offer</div>
+  <div class="section-title">Everything You Need<br>to Drive Away Today</div>
+  <p class="section-sub">From finding the right model to getting you approved — I handle it all from start to finish.</p>
+  <div class="cards">
+    <div class="card"><div class="card-icon">🚗</div><h3>New Chevrolet Vehicles</h3><p>Browse the full lineup of new Chevys — Silverado, Equinox, Tahoe, Blazer, and more. Find the one built for your life.</p></div>
+    <div class="card"><div class="card-icon">💳</div><h3>All Credit Welcome</h3><p>First-time buyer? Bad credit? No credit? I've helped hundreds of people get approved when they thought they couldn't.</p></div>
+    <div class="card"><div class="card-icon">🔄</div><h3>Trade-In Your Vehicle</h3><p>Get top dollar for your current car. I'll make the process fast, fair, and hassle-free so you walk out ahead.</p></div>
+    <div class="card"><div class="card-icon">💵</div><h3>$100 Referral Program</h3><p>Know someone looking for a car? Send them my way. If they buy, I put $100 cash in your pocket. Simple as that.</p></div>
+  </div>
+</section>
+
+<section id="about" style="background: var(--dark2);">
+  <div class="why-grid">
+    <div class="why-visual">
+      <div class="avatar-ring"><img src="images/og-logo.png" alt="Keys with OG" /></div>
+      <h3>Oscar Gonzalez</h3>
+      <div class="title-line">Sales Consultant</div>
+      <div class="dealer">AT Price Chevrolet · Pleasanton, TX</div>
+      <div class="divider"></div>
+      <blockquote>"I know how difficult it can be when shopping for a car. My goal is to walk you through the journey regardless of how long it takes to find the right vehicle for you."</blockquote>
+    </div>
+    <div>
+      <div class="section-label">Why Work With Oscar</div>
+      <div class="section-title">A Salesman Who<br>Works For You</div>
+      <div class="pillars">
+        <div class="pillar"><div class="pillar-num">01</div><div><h4>Commitment</h4><p>Oscar stays with you for the long haul — from the first conversation to keys in hand, however long that takes.</p></div></div>
+        <div class="pillar"><div class="pillar-num">02</div><div><h4>Integrity</h4><p>What he says, he does. No bait-and-switch. No hidden fees. Just honest service and real value for his customers.</p></div></div>
+        <div class="pillar"><div class="pillar-num">03</div><div><h4>Passion</h4><p>Oscar genuinely enjoys helping people get into their dream car. That energy shows up in every deal he closes.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="programs">
+  <div class="section-label">Special Programs</div>
+  <div class="section-title">Built for Your Situation</div>
+  <p class="section-sub">No matter where you're starting from, there's a path to getting you approved and driving.</p>
+  <div class="programs">
+    <div class="program"><div class="program-tag">First-Time Buyers</div><h3>Get Approved Now</h3><p>Never bought a car before? Oscar specializes in helping first-time buyers navigate financing with confidence. Many options available for any credit situation.</p><a href="#contact" class="link">Start your application →</a></div>
+    <div class="program"><div class="program-tag">Trade-In</div><h3>Sell Your Car for Top Dollar</h3><p>Looking to upgrade? Oscar will assess your current vehicle and offer a competitive trade-in value that helps lower your monthly payment on your new Chevy.</p><a href="tel:12102602489" class="link">Call to get your estimate →</a></div>
+    <div class="program"><div class="program-tag">Referral Bonus</div><h3>Earn $100 Cash</h3><p>Know someone in the market? Refer them to Oscar. When they purchase a vehicle, Oscar sends you $100 — no catch, no fine print.</p><a href="#contact" class="link">Submit a referral →</a></div>
   </div>
 </section>
 
@@ -536,83 +640,13 @@
   </div>
 </section>
 
-<div class="marquee-wrap">
-  <div class="marquee-track">
-    <span class="marquee-item">New Chevrolet Inventory</span>
-    <span class="marquee-item">First-Time Buyer Friendly</span>
-    <span class="marquee-item">All Credit Situations Welcome</span>
-    <span class="marquee-item">Top Dollar for Trade-Ins</span>
-    <span class="marquee-item">$100 Referral Bonus</span>
-    <span class="marquee-item">Pleasanton, TX</span>
-    <span class="marquee-item">New Chevrolet Inventory</span>
-    <span class="marquee-item">First-Time Buyer Friendly</span>
-    <span class="marquee-item">All Credit Situations Welcome</span>
-    <span class="marquee-item">Top Dollar for Trade-Ins</span>
-    <span class="marquee-item">$100 Referral Bonus</span>
-    <span class="marquee-item">Pleasanton, TX</span>
-  </div>
-</div>
-
-<section id="services">
-  <div class="section-label">What I Offer</div>
-  <div class="section-title">Everything You Need<br>to Drive Away Today</div>
-  <p class="section-sub">From finding the right model to getting you approved — I handle it all from start to finish.</p>
-  <div class="cards">
-    <div class="card"><div class="card-icon">🚗</div><h3>New Chevrolet Vehicles</h3><p>Browse the full lineup of new Chevys — Silverado, Equinox, Tahoe, Blazer, and more. Find the one built for your life.</p></div>
-    <div class="card"><div class="card-icon">💳</div><h3>All Credit Welcome</h3><p>First-time buyer? Bad credit? No credit? I've helped hundreds of people get approved when they thought they couldn't.</p></div>
-    <div class="card"><div class="card-icon">🔄</div><h3>Trade-In Your Vehicle</h3><p>Get top dollar for your current car. I'll make the process fast, fair, and hassle-free so you walk out ahead.</p></div>
-    <div class="card"><div class="card-icon">💵</div><h3>$100 Referral Program</h3><p>Know someone looking for a car? Send them my way. If they buy, I put $100 cash in your pocket. Simple as that.</p></div>
-  </div>
-</section>
-
-<section id="about" style="background: var(--dark2);">
-  <div class="why-grid">
-    <div class="why-visual">
-      <div class="avatar-ring">OG</div>
-      <h3>Oscar Gonzalez</h3>
-      <div class="title-line">Sales Consultant</div>
-      <div class="dealer">AT Price Chevrolet · Pleasanton, TX</div>
-      <div class="divider"></div>
-      <blockquote>"I know how difficult it can be when shopping for a car. My goal is to walk you through the journey regardless of how long it takes to find the right vehicle for you."</blockquote>
-    </div>
-    <div>
-      <div class="section-label">Why Work With Oscar</div>
-      <div class="section-title">A Salesman Who<br>Works For You</div>
-      <div class="pillars">
-        <div class="pillar"><div class="pillar-num">01</div><div><h4>Commitment</h4><p>Oscar stays with you for the long haul — from the first conversation to keys in hand, however long that takes.</p></div></div>
-        <div class="pillar"><div class="pillar-num">02</div><div><h4>Integrity</h4><p>What he says, he does. No bait-and-switch. No hidden fees. Just honest service and real value for his customers.</p></div></div>
-        <div class="pillar"><div class="pillar-num">03</div><div><h4>Passion</h4><p>Oscar genuinely enjoys helping people get into their dream car. That energy shows up in every deal he closes.</p></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="programs">
-  <div class="section-label">Special Programs</div>
-  <div class="section-title">Built for Your Situation</div>
-  <p class="section-sub">No matter where you're starting from, there's a path to getting you approved and driving.</p>
-  <div class="programs">
-    <div class="program"><div class="program-tag">First-Time Buyers</div><h3>Get Approved Now</h3><p>Never bought a car before? Oscar specializes in helping first-time buyers navigate financing with confidence. Many options available for any credit situation.</p><a href="#contact" class="link">Start your application →</a></div>
-    <div class="program"><div class="program-tag">Trade-In</div><h3>Sell Your Car for Top Dollar</h3><p>Looking to upgrade? Oscar will assess your current vehicle and offer a competitive trade-in value that helps lower your monthly payment on your new Chevy.</p><a href="tel:12102602489" class="link">Call to get your estimate →</a></div>
-    <div class="program"><div class="program-tag">Referral Bonus</div><h3>Earn $100 Cash</h3><p>Know someone in the market? Refer them to Oscar. When they purchase a vehicle, Oscar sends you $100 — no catch, no fine print.</p><a href="#contact" class="link">Submit a referral →</a></div>
-  </div>
-</section>
-
 <section id="social" class="social-section">
-  <div class="section-label">Follow Along</div>
-  <div class="section-title">See Oscar in Action</div>
-  <p class="section-sub">Follow Oscar on Facebook and Instagram for real deal walkthroughs, new inventory drops, and tips on getting approved.</p>
+  <div class="section-label">Follow on Instagram</div>
+  <div class="section-title">Watch Oscar in Action</div>
+  <p class="section-sub">Real deals, real approvals — follow <strong style="color:var(--text);">@keyswit.og</strong> for the latest straight from the lot.</p>
 
-  <div class="social-platforms">
-    <a href="https://www.facebook.com/profile.php?id=100043055113777" target="_blank" class="platform-card fb">
-      <div class="platform-icon fb">f</div>
-      <div class="platform-info">
-        <div class="platform-name">Facebook</div>
-        <div class="platform-handle">Oscar Gonzalez</div>
-        <div class="platform-action">Watch Reels →</div>
-      </div>
-    </a>
-    <a href="https://www.instagram.com/keyswit.og/" target="_blank" class="platform-card ig">
+  <div style="display:flex; justify-content:center; margin-bottom:2.5rem;">
+    <a href="https://www.instagram.com/keyswit.og/" target="_blank" class="platform-card ig" style="max-width:300px;">
       <div class="platform-icon ig">📷</div>
       <div class="platform-info">
         <div class="platform-name">Instagram</div>
@@ -622,40 +656,21 @@
     </a>
   </div>
 
-  <div class="reels-grid">
-    <a href="https://www.facebook.com/profile.php?id=100043055113777" target="_blank" class="reel-card">
-      <div class="reel-bg"></div>
-      <div class="reel-play">▶</div>
-      <div class="reel-label">
-        <div class="reel-platform-badge fb">Facebook Reel</div>
-        <div class="reel-title">New Silverado just hit the lot 🔥</div>
-      </div>
-    </a>
-    <a href="https://www.instagram.com/keyswit.og/" target="_blank" class="reel-card">
-      <div class="reel-bg"></div>
-      <div class="reel-play">▶</div>
-      <div class="reel-label">
-        <div class="reel-platform-badge ig">Instagram</div>
-        <div class="reel-title">Bad credit? Here's what I can do for you</div>
-      </div>
-    </a>
-    <a href="https://www.facebook.com/profile.php?id=100043055113777" target="_blank" class="reel-card">
-      <div class="reel-bg"></div>
-      <div class="reel-play">▶</div>
-      <div class="reel-label">
-        <div class="reel-platform-badge fb">Facebook Reel</div>
-        <div class="reel-title">First-time buyer approved in under an hour</div>
-      </div>
-    </a>
-    <a href="https://www.instagram.com/keyswit.og/" target="_blank" class="reel-card">
-      <div class="reel-bg"></div>
-      <div class="reel-play">▶</div>
-      <div class="reel-label">
-        <div class="reel-platform-badge ig">Instagram</div>
-        <div class="reel-title">How the $100 referral bonus works</div>
-      </div>
-    </a>
+  <div class="reels-embed-grid">
+    <blockquote class="instagram-media"
+      data-instgrm-permalink="https://www.instagram.com/reel/DWtvgcdkSOu/?igsh=YnFvcGE5ZW10ejU0"
+      data-instgrm-version="14"
+      style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);margin:0;padding:0;width:100%;">
+      <div style="padding:16px;"><a href="https://www.instagram.com/reel/DWtvgcdkSOu/?igsh=YnFvcGE5ZW10ejU0" target="_blank" rel="noopener">View on Instagram</a></div>
+    </blockquote>
+    <blockquote class="instagram-media"
+      data-instgrm-permalink="https://www.instagram.com/reel/DWj0o_AEZlm/?igsh=MTI1aHRsMWR0cGk1MA=="
+      data-instgrm-version="14"
+      style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);margin:0;padding:0;width:100%;">
+      <div style="padding:16px;"><a href="https://www.instagram.com/reel/DWj0o_AEZlm/?igsh=MTI1aHRsMWR0cGk1MA==" target="_blank" rel="noopener">View on Instagram</a></div>
+    </blockquote>
   </div>
+  <script async src="//www.instagram.com/embed.js"></script>
 
   <div class="social-cta-bar">
     <div class="social-cta-text">
@@ -664,7 +679,6 @@
     </div>
     <div class="social-cta-btns">
       <a href="https://ig.me/m/keyswit.og" target="_blank" class="btn-dm ig">📷 DM on Instagram</a>
-      <a href="https://www.facebook.com/profile.php?id=100043055113777" target="_blank" class="btn-dm fb">💬 Message on Facebook</a>
       <a href="#contact" class="btn-dm form">Fill Out the Form →</a>
     </div>
   </div>
@@ -838,6 +852,22 @@ document.getElementById('welcomeOverlay').addEventListener('click', function(e) 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closePopup();
 });
+
+// ── Theme Toggle ──
+function toggleTheme() {
+  const isLight = document.documentElement.classList.toggle('light-mode');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  document.querySelector('.theme-toggle').textContent = isLight ? '🌙' : '☀';
+}
+(function() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.documentElement.classList.add('light-mode');
+    document.addEventListener('DOMContentLoaded', function() {
+      const btn = document.querySelector('.theme-toggle');
+      if (btn) btn.textContent = '🌙';
+    });
+  }
+})();
 
 function filterInventory(cat, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
