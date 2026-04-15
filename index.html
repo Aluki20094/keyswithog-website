@@ -534,7 +534,7 @@
       <div class="popup-divider"></div>
       <p>Great to see you again. Oscar appreciates your trust — ready to find your next ride or refer a friend for that <strong style="color:var(--gold);">$100 bonus?</strong></p>
       <div class="popup-btn-group">
-        <button class="popup-btn-yes" onclick="closePopup(); document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Let's Talk →</button>
+        <button class="popup-btn-yes" onclick="closePopup(); setTimeout(function(){ document.getElementById('referral').scrollIntoView({behavior:'smooth'}); }, 650)">Get Your Referral Code →</button>
         <button class="popup-btn-no" onclick="closePopup()">Just Browsing</button>
       </div>
     </div>
@@ -1433,6 +1433,14 @@ function filterInventory(cat, btn) {
   btn.classList.add('active');
   document.querySelectorAll('.vehicle-card').forEach(card => {
     card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'flex' : 'none';
+  });
+}
+
+// ── Scroll-to-top on mobile load ──
+if (window.innerWidth <= 768) {
+  window.scrollTo(0, 0);
+  document.addEventListener('DOMContentLoaded', function() {
+    window.scrollTo(0, 0);
   });
 }
 
