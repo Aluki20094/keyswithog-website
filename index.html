@@ -209,8 +209,9 @@
     overflow: hidden;
   }
   .popup-avatar img { width: 100%; height: 100%; object-fit: contain; }
-  .popup-screen { display: none; text-align: center; }
-  .popup-screen.active { display: block; }
+  .popup-screens-wrap { position: relative; min-height: 340px; }
+  .popup-screen { display: block; opacity: 0; pointer-events: none; position: absolute; top: 0; left: 0; width: 100%; text-align: center; transition: opacity 0.25s ease; }
+  .popup-screen.active { opacity: 1; pointer-events: auto; }
   .popup-screen h2 {
     font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem;
     letter-spacing: 0.04em; margin-bottom: 0.5rem;
@@ -267,6 +268,9 @@
   .popup-feature { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.93rem; color: var(--muted); }
   .popup-feature::before { content: '✓'; color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 0.1rem; }
 
+  /* ── Section Accordion ── */
+  .acc-tab { display: none; }
+
   /* ── Mobile Menu ── */
   .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 200; margin-left: 0.5rem; }
   .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: transform 0.25s, opacity 0.2s; }
@@ -284,15 +288,15 @@
   html.light-mode .mobile-menu-panel { background: var(--dark2); }
 
   @media (max-width: 768px) {
-    nav { padding: 1rem 1.25rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } .theme-toggle { display: none; } section { padding: 3rem 1.25rem; }
+    nav { padding: 1rem 1.25rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } .theme-toggle { display: none !important; } section { padding: 3rem 1.25rem; }
     .hero { padding: 5rem 1.25rem 2.5rem; min-height: 90vh; }
     .hero-bg { background-position: 58% center; }
     .hero h1 { font-size: clamp(2.8rem, 11vw, 4rem); margin-bottom: 1rem; }
     .hero p { font-size: 0.97rem; margin-bottom: 1.75rem; }
     .hero-actions { gap: 0.75rem; }
     .hero-actions a { padding: 0.8rem 1.4rem; font-size: 0.95rem; }
-    .hero-stats { gap: 1.5rem; margin-top: 2.5rem; padding-top: 1.5rem; flex-wrap: wrap; }
-    .stat-num { font-size: 2rem; } .why-grid { grid-template-columns: 1fr; }
+    .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 2.5rem; padding-top: 1.5rem; text-align: center; }
+    .stat-num { font-size: 1.55rem; } .stat-label { font-size: 0.68rem; } .why-grid { grid-template-columns: 1fr; }
     .form-grid { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
     .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
     .phone-bar { flex-direction: column; gap: 0.25rem; padding: 1rem 1.25rem; }
@@ -300,8 +304,16 @@
     .social-cta-bar { flex-direction: column; text-align: center; }
     .social-cta-btns { justify-content: center; }
     .inventory-grid { grid-template-columns: 1fr; }
-    .popup-box { padding: 2rem 1.5rem 1.5rem; }
+    .popup-box { padding: 2rem 1.5rem 1.5rem; } .popup-screens-wrap { min-height: 300px; }
     .reels-embed-grid { grid-template-columns: 1fr; }
+    .acc-section { padding: 0 !important; }
+    .acc-tab { display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 1.25rem; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.06em; border-bottom: 1px solid rgba(255,255,255,0.07); transition: color 0.2s; user-select: none; }
+    .acc-section.open .acc-tab { color: var(--gold); border-bottom-color: rgba(201,168,76,0.35); }
+    .acc-arrow { font-size: 0.65rem; color: var(--muted); transition: transform 0.3s, color 0.2s; }
+    .acc-section.open .acc-arrow { transform: rotate(180deg); color: var(--gold); }
+    .acc-body { max-height: 0; overflow: hidden; transition: max-height 0.45s ease; padding: 2.5rem 1.25rem; }
+    html.light-mode .acc-tab { border-bottom-color: rgba(0,0,0,0.08); }
+    html.light-mode .acc-section.open .acc-tab { border-bottom-color: rgba(26,82,212,0.3); }
   }
 
   /* ── Light Mode ── */
@@ -368,6 +380,7 @@
   <div class="popup-box">
     <button class="popup-close" onclick="closePopup()" aria-label="Close">✕</button>
 
+    <div class="popup-screens-wrap">
     <div id="screenQuestion" class="popup-screen active">
       <div class="popup-avatar"><img src="images/og-logo.jpg" alt="Keys with OG" /></div>
       <h2>Hey, <em>welcome!</em></h2>
@@ -428,6 +441,7 @@
       </div>
     </div>
 
+    </div><!-- /popup-screens-wrap -->
   </div>
 </div>
 
@@ -497,48 +511,66 @@
   </div>
 </div>
 
-<section id="services">
-  <div class="section-label">What I Offer</div>
-  <div class="section-title">Everything You Need<br>to Drive Away Today</div>
-  <p class="section-sub">From finding the right model to getting you approved — I handle it all from start to finish.</p>
-  <div class="cards">
-    <div class="card"><div class="card-icon">🚗</div><h3>New Chevrolet Vehicles</h3><p>Browse the full lineup of new Chevys — Silverado, Equinox, Tahoe, Blazer, and more. Find the one built for your life.</p></div>
-    <div class="card"><div class="card-icon">💳</div><h3>All Credit Welcome</h3><p>First-time buyer? Bad credit? No credit? I've helped hundreds of people get approved when they thought they couldn't.</p></div>
-    <div class="card"><div class="card-icon">🔄</div><h3>Trade-In Your Vehicle</h3><p>Get top dollar for your current car. I'll make the process fast, fair, and hassle-free so you walk out ahead.</p></div>
-    <div class="card"><div class="card-icon">💵</div><h3>$100 Referral Program</h3><p>Know someone looking for a car? Send them my way. If they buy, I put $100 cash in your pocket. Simple as that.</p></div>
+<section id="services" class="acc-section">
+  <div class="acc-tab" onclick="toggleSection(this)">
+    <span>What I Offer</span>
+    <span class="acc-arrow">▼</span>
+  </div>
+  <div class="acc-body">
+    <div class="section-label">What I Offer</div>
+    <div class="section-title">Everything You Need<br>to Drive Away Today</div>
+    <p class="section-sub">From finding the right model to getting you approved — I handle it all from start to finish.</p>
+    <div class="cards">
+      <div class="card"><div class="card-icon">🚗</div><h3>New Chevrolet Vehicles</h3><p>Browse the full lineup of new Chevys — Silverado, Equinox, Tahoe, Blazer, and more. Find the one built for your life.</p></div>
+      <div class="card"><div class="card-icon">💳</div><h3>All Credit Welcome</h3><p>First-time buyer? Bad credit? No credit? I've helped hundreds of people get approved when they thought they couldn't.</p></div>
+      <div class="card"><div class="card-icon">🔄</div><h3>Trade-In Your Vehicle</h3><p>Get top dollar for your current car. I'll make the process fast, fair, and hassle-free so you walk out ahead.</p></div>
+      <div class="card"><div class="card-icon">💵</div><h3>$100 Referral Program</h3><p>Know someone looking for a car? Send them my way. If they buy, I put $100 cash in your pocket. Simple as that.</p></div>
+    </div>
   </div>
 </section>
 
-<section id="about" style="background: var(--dark2);">
-  <div class="why-grid">
-    <div class="why-visual">
-      <div class="avatar-ring"><img src="images/og-logo.jpg" alt="Keys with OG" /></div>
-      <h3>Oscar Gonzalez</h3>
-      <div class="title-line">Sales Consultant</div>
-      <div class="dealer">AT Price Chevrolet · Pleasanton, TX</div>
-      <div class="divider"></div>
-      <blockquote>"I know how difficult it can be when shopping for a car. My goal is to walk you through the journey regardless of how long it takes to find the right vehicle for you."</blockquote>
-    </div>
-    <div>
-      <div class="section-label">Why Work With Oscar</div>
-      <div class="section-title">A Salesman Who<br>Works For You</div>
-      <div class="pillars">
-        <div class="pillar"><div class="pillar-num">01</div><div><h4>Commitment</h4><p>Oscar stays with you for the long haul — from the first conversation to keys in hand, however long that takes.</p></div></div>
-        <div class="pillar"><div class="pillar-num">02</div><div><h4>Integrity</h4><p>What he says, he does. No bait-and-switch. No hidden fees. Just honest service and real value for his customers.</p></div></div>
-        <div class="pillar"><div class="pillar-num">03</div><div><h4>Passion</h4><p>Oscar genuinely enjoys helping people get into their dream car. That energy shows up in every deal he closes.</p></div></div>
+<section id="about" class="acc-section" style="background: var(--dark2);">
+  <div class="acc-tab" onclick="toggleSection(this)">
+    <span>Why Work With Oscar</span>
+    <span class="acc-arrow">▼</span>
+  </div>
+  <div class="acc-body">
+    <div class="why-grid">
+      <div class="why-visual">
+        <div class="avatar-ring"><img src="images/og-logo.jpg" alt="Keys with OG" /></div>
+        <h3>Oscar Gonzalez</h3>
+        <div class="title-line">Sales Consultant</div>
+        <div class="dealer">AT Price Chevrolet · Pleasanton, TX</div>
+        <div class="divider"></div>
+        <blockquote>"I know how difficult it can be when shopping for a car. My goal is to walk you through the journey regardless of how long it takes to find the right vehicle for you."</blockquote>
+      </div>
+      <div>
+        <div class="section-label">Why Work With Oscar</div>
+        <div class="section-title">A Salesman Who<br>Works For You</div>
+        <div class="pillars">
+          <div class="pillar"><div class="pillar-num">01</div><div><h4>Commitment</h4><p>Oscar stays with you for the long haul — from the first conversation to keys in hand, however long that takes.</p></div></div>
+          <div class="pillar"><div class="pillar-num">02</div><div><h4>Integrity</h4><p>What he says, he does. No bait-and-switch. No hidden fees. Just honest service and real value for his customers.</p></div></div>
+          <div class="pillar"><div class="pillar-num">03</div><div><h4>Passion</h4><p>Oscar genuinely enjoys helping people get into their dream car. That energy shows up in every deal he closes.</p></div></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="programs">
-  <div class="section-label">Special Programs</div>
-  <div class="section-title">Built for Your Situation</div>
-  <p class="section-sub">No matter where you're starting from, there's a path to getting you approved and driving.</p>
-  <div class="programs">
-    <div class="program"><div class="program-tag">First-Time Buyers</div><h3>Get Approved Now</h3><p>Never bought a car before? Oscar specializes in helping first-time buyers navigate financing with confidence. Many options available for any credit situation.</p><a href="#contact" class="link">Start your application →</a></div>
-    <div class="program"><div class="program-tag">Trade-In</div><h3>Sell Your Car for Top Dollar</h3><p>Looking to upgrade? Oscar will assess your current vehicle and offer a competitive trade-in value that helps lower your monthly payment on your new Chevy.</p><a href="tel:12102602489" class="link">Call to get your estimate →</a></div>
-    <div class="program"><div class="program-tag">Referral Bonus</div><h3>Earn $100 Cash</h3><p>Know someone in the market? Refer them to Oscar. When they purchase a vehicle, Oscar sends you $100 — no catch, no fine print.</p><a href="#contact" class="link">Submit a referral →</a></div>
+<section id="programs" class="acc-section">
+  <div class="acc-tab" onclick="toggleSection(this)">
+    <span>Special Programs</span>
+    <span class="acc-arrow">▼</span>
+  </div>
+  <div class="acc-body">
+    <div class="section-label">Special Programs</div>
+    <div class="section-title">Built for Your Situation</div>
+    <p class="section-sub">No matter where you're starting from, there's a path to getting you approved and driving.</p>
+    <div class="programs">
+      <div class="program"><div class="program-tag">First-Time Buyers</div><h3>Get Approved Now</h3><p>Never bought a car before? Oscar specializes in helping first-time buyers navigate financing with confidence. Many options available for any credit situation.</p><a href="#contact" class="link">Start your application →</a></div>
+      <div class="program"><div class="program-tag">Trade-In</div><h3>Sell Your Car for Top Dollar</h3><p>Looking to upgrade? Oscar will assess your current vehicle and offer a competitive trade-in value that helps lower your monthly payment on your new Chevy.</p><a href="tel:12102602489" class="link">Call to get your estimate →</a></div>
+      <div class="program"><div class="program-tag">Referral Bonus</div><h3>Earn $100 Cash</h3><p>Know someone in the market? Refer them to Oscar. When they purchase a vehicle, Oscar sends you $100 — no catch, no fine print.</p><a href="#contact" class="link">Submit a referral →</a></div>
+    </div>
   </div>
 </section>
 
@@ -1015,6 +1047,29 @@ document.addEventListener('DOMContentLoaded', function() {
   hideObserver.observe(contact);
 });
 
+function toggleSection(tab) {
+  if (window.innerWidth > 768) return;
+  var section = tab.closest('.acc-section');
+  var body = section.querySelector('.acc-body');
+  var isOpen = section.classList.contains('open');
+  document.querySelectorAll('.acc-section').forEach(function(s) {
+    s.classList.remove('open');
+    s.querySelector('.acc-body').style.maxHeight = '0';
+  });
+  if (!isOpen) {
+    section.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
+window.addEventListener('resize', function() {
+  if (window.innerWidth > 768) {
+    document.querySelectorAll('.acc-section').forEach(function(s) {
+      s.classList.remove('open');
+      s.querySelector('.acc-body').style.maxHeight = '';
+    });
+  }
+});
+
 function filterInventory(cat, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -1022,6 +1077,7 @@ function filterInventory(cat, btn) {
     card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'flex' : 'none';
   });
 }
+
 </script>
 </body>
 </html>
