@@ -173,6 +173,95 @@
   .phone-bar { background: var(--gold); padding: 1.1rem 2.5rem; display: flex; align-items: center; justify-content: center; gap: 1.5rem; text-align: center; }
   .phone-bar span { font-size: 0.85rem; font-weight: 600; color: var(--dark); letter-spacing: 0.04em; text-transform: uppercase; }
   .phone-bar a { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--dark); text-decoration: none; letter-spacing: 0.08em; }
+  /* ── Welcome Popup ── */
+  .popup-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.25rem;
+    animation: fadeIn 0.3s ease;
+  }
+  .popup-overlay.hidden { display: none; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .popup-box {
+    background: var(--dark2); border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px; width: 100%; max-width: 480px;
+    padding: 2.5rem 2.25rem 2rem; position: relative;
+    animation: slideUp 0.35s cubic-bezier(0.22,1,0.36,1);
+  }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  .popup-close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: rgba(255,255,255,0.07); border: none; color: var(--muted);
+    width: 32px; height: 32px; border-radius: 50%; font-size: 1rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .popup-close:hover { background: rgba(255,255,255,0.14); color: var(--text); }
+  .popup-avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), #8a5c1e);
+    margin: 0 auto 1.25rem; display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--dark);
+  }
+  .popup-screen { display: none; text-align: center; }
+  .popup-screen.active { display: block; }
+  .popup-screen h2 {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem;
+    letter-spacing: 0.04em; margin-bottom: 0.5rem;
+  }
+  .popup-screen h2 em { color: var(--gold); font-style: normal; }
+  .popup-screen p { color: var(--muted); font-size: 0.97rem; line-height: 1.7; margin-bottom: 1.75rem; }
+  .popup-btn-group { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+  .popup-btn-yes {
+    flex: 1; min-width: 130px; background: var(--gold); color: var(--dark);
+    border: none; padding: 0.85rem 1.5rem; font-family: 'DM Sans', sans-serif;
+    font-size: 0.97rem; font-weight: 700; border-radius: var(--radius);
+    cursor: pointer; transition: background 0.2s, transform 0.15s; letter-spacing: 0.02em;
+  }
+  .popup-btn-yes:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .popup-btn-no {
+    flex: 1; min-width: 130px; background: transparent; color: var(--text);
+    border: 1px solid rgba(255,255,255,0.18); padding: 0.85rem 1.5rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.97rem; font-weight: 500;
+    border-radius: var(--radius); cursor: pointer; transition: border-color 0.2s, color 0.2s, transform 0.15s;
+  }
+  .popup-btn-no:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
+  /* Welcome back screen */
+  .popup-welcome-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold); padding: 0.3rem 0.9rem; border-radius: 2px;
+    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 600; margin-bottom: 1rem;
+  }
+  .popup-divider { width: 36px; height: 2px; background: var(--gold); margin: 0.75rem auto 1.25rem; }
+  /* Slideshow */
+  .popup-slides { position: relative; overflow: hidden; }
+  .popup-slide { display: none; }
+  .popup-slide.active { display: block; }
+  .popup-slide-icon { font-size: 2.2rem; margin-bottom: 0.75rem; }
+  .popup-dots { display: flex; justify-content: center; gap: 0.5rem; margin: 1.25rem 0 1.5rem; }
+  .popup-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); border: none; cursor: pointer;
+    transition: background 0.2s, transform 0.2s; padding: 0;
+  }
+  .popup-dot.active { background: var(--gold); transform: scale(1.2); }
+  .popup-nav { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; }
+  .popup-nav-btn {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text); padding: 0.6rem 1.25rem; border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif; font-size: 0.88rem; cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .popup-nav-btn:hover { border-color: var(--gold); }
+  .popup-nav-btn.primary { background: var(--gold); color: var(--dark); border-color: var(--gold); font-weight: 700; }
+  .popup-nav-btn.primary:hover { background: var(--gold-light); }
+  .popup-features { display: flex; flex-direction: column; gap: 0.6rem; text-align: left; margin-bottom: 1rem; }
+  .popup-feature { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.93rem; color: var(--muted); }
+  .popup-feature::before { content: '✓'; color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 0.1rem; }
+
   @media (max-width: 768px) {
     nav { padding: 1rem 1.25rem; } .nav-links { display: none; } section { padding: 3.5rem 1.25rem; }
     .hero { padding: 6rem 1.25rem 3rem; } .hero-stats { gap: 1.5rem; } .why-grid { grid-template-columns: 1fr; }
@@ -183,10 +272,81 @@
     .social-cta-bar { flex-direction: column; text-align: center; }
     .social-cta-btns { justify-content: center; }
     .inventory-grid { grid-template-columns: 1fr; }
+    .popup-box { padding: 2rem 1.5rem 1.5rem; }
   }
 </style>
 </head>
 <body>
+
+<!-- ── Welcome Popup ── -->
+<div class="popup-overlay" id="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Welcome">
+
+  <!-- Screen 1: Question -->
+  <div class="popup-box">
+    <button class="popup-close" onclick="closePopup()" aria-label="Close">✕</button>
+
+    <div id="screenQuestion" class="popup-screen active">
+      <div class="popup-avatar">OG</div>
+      <h2>Hey, <em>welcome!</em></h2>
+      <p>Before you look around — have you done business with Oscar before?</p>
+      <div class="popup-btn-group">
+        <button class="popup-btn-yes" onclick="showWelcomeBack()">Yes, I have! 👋</button>
+        <button class="popup-btn-no" onclick="showIntro()">Nope, first time</button>
+      </div>
+    </div>
+
+    <!-- Screen 2a: Welcome Back -->
+    <div id="screenWelcomeBack" class="popup-screen">
+      <div class="popup-welcome-badge">★ Returning Customer</div>
+      <div class="popup-avatar">OG</div>
+      <h2><em>Welcome Back!</em></h2>
+      <div class="popup-divider"></div>
+      <p>Great to see you again. Oscar appreciates your trust — ready to find your next ride or refer a friend for that <strong style="color:var(--gold);">$100 bonus?</strong></p>
+      <div class="popup-btn-group">
+        <button class="popup-btn-yes" onclick="closePopup(); document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Let's Talk →</button>
+        <button class="popup-btn-no" onclick="closePopup()">Just Browsing</button>
+      </div>
+    </div>
+
+    <!-- Screen 2b: Intro Slideshow -->
+    <div id="screenIntro" class="popup-screen">
+      <div class="popup-slides">
+
+        <div class="popup-slide active" id="slide1">
+          <div class="popup-slide-icon">🤝</div>
+          <h2>Meet <em>Oscar</em></h2>
+          <div class="popup-divider"></div>
+          <p>Oscar Gonzalez is a sales consultant at <strong style="color:var(--text);">AT Price Chevrolet</strong> in Pleasanton, TX. Born and raised in South Texas, he knows his community — and he treats every customer like family.</p>
+          <p style="margin-bottom:0;">"My goal is simple: get you into the right vehicle at the right price, no stress."</p>
+        </div>
+
+        <div class="popup-slide" id="slide2">
+          <div class="popup-slide-icon">⭐</div>
+          <h2>Why <em>Oscar?</em></h2>
+          <div class="popup-divider"></div>
+          <div class="popup-features">
+            <div class="popup-feature">All credit situations welcome — good, bad, or none at all</div>
+            <div class="popup-feature">First-time buyers approved every week</div>
+            <div class="popup-feature">Honest answers, no pressure, no runaround</div>
+            <div class="popup-feature">$100 referral bonus for every friend you send his way</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="popup-dots">
+        <button class="popup-dot active" onclick="goToSlide(0)" aria-label="Slide 1"></button>
+        <button class="popup-dot" onclick="goToSlide(1)" aria-label="Slide 2"></button>
+      </div>
+
+      <div class="popup-nav">
+        <button class="popup-nav-btn" id="slidePrevBtn" onclick="prevSlide()" style="visibility:hidden;">← Back</button>
+        <button class="popup-nav-btn primary" id="slideNextBtn" onclick="nextSlide()">Next →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <nav>
   <div class="nav-logo">Keys<span>withOG</span></div>
@@ -608,6 +768,73 @@ function showInterest(vehicleName) {
   document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
   setTimeout(() => document.getElementById('fname').focus(), 600);
 }
+
+// ── Welcome Popup ──
+let currentSlide = 0;
+const totalSlides = 2;
+
+function closePopup() {
+  const overlay = document.getElementById('welcomeOverlay');
+  overlay.style.animation = 'fadeIn 0.2s ease reverse';
+  setTimeout(() => overlay.classList.add('hidden'), 180);
+}
+
+function showWelcomeBack() {
+  document.getElementById('screenQuestion').classList.remove('active');
+  document.getElementById('screenWelcomeBack').classList.add('active');
+}
+
+function showIntro() {
+  document.getElementById('screenQuestion').classList.remove('active');
+  document.getElementById('screenIntro').classList.add('active');
+  currentSlide = 0;
+  updateSlide();
+}
+
+function goToSlide(index) {
+  currentSlide = index;
+  updateSlide();
+}
+
+function nextSlide() {
+  if (currentSlide < totalSlides - 1) {
+    currentSlide++;
+    updateSlide();
+  } else {
+    closePopup();
+  }
+}
+
+function prevSlide() {
+  if (currentSlide > 0) {
+    currentSlide--;
+    updateSlide();
+  }
+}
+
+function updateSlide() {
+  document.querySelectorAll('.popup-slide').forEach((s, i) => {
+    s.classList.toggle('active', i === currentSlide);
+  });
+  document.querySelectorAll('.popup-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === currentSlide);
+  });
+  const prevBtn = document.getElementById('slidePrevBtn');
+  const nextBtn = document.getElementById('slideNextBtn');
+  prevBtn.style.visibility = currentSlide === 0 ? 'hidden' : 'visible';
+  nextBtn.textContent = currentSlide === totalSlides - 1 ? "Let's Go →" : 'Next →';
+  nextBtn.classList.toggle('primary', true);
+}
+
+// Close on overlay click (outside the box)
+document.getElementById('welcomeOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closePopup();
+});
+
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closePopup();
+});
 
 function filterInventory(cat, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
