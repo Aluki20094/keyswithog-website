@@ -204,11 +204,11 @@
   .vehicle-highlights li::before { content: '✓'; color: var(--gold); font-weight: 700; font-size: 0.8rem; flex-shrink: 0; }
   .vehicle-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.35rem; color: var(--text); letter-spacing: 0.04em; }
   .vehicle-price span { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; color: var(--muted); font-weight: 400; letter-spacing: 0; vertical-align: middle; margin-left: 0.3rem; }
-  .vehicle-footer { padding: 1rem 1.4rem 1.4rem; display: flex; gap: 0.6rem; }
-  .btn-interested { flex: 1; background: var(--blue); color: var(--dark); border: none; padding: 0.7rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 700; border-radius: var(--radius); cursor: pointer; transition: background 0.2s; letter-spacing: 0.02em; }
+  .vehicle-footer { padding: 1rem 1.4rem 1.4rem; display: flex; flex-direction: column; gap: 0.55rem; }
+  .btn-interested { width: 100%; background: var(--blue); color: var(--dark); border: none; padding: 0.75rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 700; border-radius: var(--radius); cursor: pointer; transition: background 0.2s; letter-spacing: 0.02em; text-align: center; }
   .btn-interested:hover { background: var(--blue-dark); }
-  .btn-more { background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,0.12); padding: 0.7rem 0.9rem; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; transition: border-color 0.2s, color 0.2s; text-decoration: none; display: inline-flex; align-items: center; }
-  .btn-more:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-more { background: transparent; color: var(--muted); border: none; padding: 0.15rem 0; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; cursor: pointer; transition: color 0.2s; text-decoration: underline; text-underline-offset: 3px; display: block; text-align: center; opacity: 0.65; }
+  .btn-more:hover { color: var(--gold); opacity: 1; }
   .inventory-footer { text-align: center; margin-top: 2.5rem; }
   .inventory-footer p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
   .btn-full-inventory { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid rgba(255,255,255,0.35); color: var(--blue); padding: 0.85rem 2rem; border-radius: var(--radius); text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: background 0.2s, border-color 0.2s; }
@@ -792,7 +792,7 @@
 <section id="inventory" class="inventory-section">
   <div class="section-label">Current Lineup</div>
   <h2 class="section-title">Browse the Inventory</h2>
-  <p class="section-sub">See something you like? Hit "I'm Interested" and Oscar will reach out to you directly with availability, pricing, and next steps.</p>
+  <p class="section-sub">See something you like? Hit "Contact Oscar About This Car" and he'll reach out directly with availability, pricing, and next steps.</p>
 
   <div class="inventory-filters">
     <button class="filter-btn active" onclick="filterInventory('all', this)">All Vehicles</button>
@@ -821,8 +821,8 @@
         <div class="vehicle-price">From $36,900 <span>MSRP</span></div>
       </div>
       <div class="vehicle-footer">
-        <button class="btn-interested" onclick="showInterest('Chevrolet Silverado (Truck)')">I'm Interested →</button>
-        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">See Lot</a>
+        <button class="btn-interested" onclick="showInterest('Chevrolet Silverado (Truck)')">Contact Oscar About This Car</button>
+        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">View Full Inventory at Dealership</a>
       </div>
     </div>
 
@@ -843,8 +843,8 @@
         <div class="vehicle-price">From $28,300 <span>MSRP</span></div>
       </div>
       <div class="vehicle-footer">
-        <button class="btn-interested" onclick="showInterest('Chevrolet Colorado (Mid-Size Truck)')">I'm Interested →</button>
-        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">See Lot</a>
+        <button class="btn-interested" onclick="showInterest('Chevrolet Colorado (Mid-Size Truck)')">Contact Oscar About This Car</button>
+        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">View Full Inventory at Dealership</a>
       </div>
     </div>
 
@@ -865,8 +865,8 @@
         <div class="vehicle-price">From $28,600 <span>MSRP</span></div>
       </div>
       <div class="vehicle-footer">
-        <button class="btn-interested" onclick="showInterest('Chevrolet Equinox (SUV)')">I'm Interested →</button>
-        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">See Lot</a>
+        <button class="btn-interested" onclick="showInterest('Chevrolet Equinox (SUV)')">Contact Oscar About This Car</button>
+        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">View Full Inventory at Dealership</a>
       </div>
     </div>
 
@@ -887,8 +887,8 @@
         <div class="vehicle-price">From $35,000 <span>MSRP</span></div>
       </div>
       <div class="vehicle-footer">
-        <button class="btn-interested" onclick="showInterest('Chevrolet Blazer')">I'm Interested →</button>
-        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">See Lot</a>
+        <button class="btn-interested" onclick="showInterest('Chevrolet Blazer')">Contact Oscar About This Car</button>
+        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">View Full Inventory at Dealership</a>
       </div>
     </div>
 
@@ -909,8 +909,8 @@
         <div class="vehicle-price">From $56,200 <span>MSRP</span></div>
       </div>
       <div class="vehicle-footer">
-        <button class="btn-interested" onclick="showInterest('Chevrolet Tahoe / Suburban')">I'm Interested →</button>
-        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">See Lot</a>
+        <button class="btn-interested" onclick="showInterest('Chevrolet Tahoe / Suburban')">Contact Oscar About This Car</button>
+        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">View Full Inventory at Dealership</a>
       </div>
     </div>
 
@@ -931,8 +931,8 @@
         <div class="vehicle-price">From $20,400 <span>MSRP</span></div>
       </div>
       <div class="vehicle-footer">
-        <button class="btn-interested" onclick="showInterest('Chevrolet Malibu / Trax (Sedan/Car)')">I'm Interested →</button>
-        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">See Lot</a>
+        <button class="btn-interested" onclick="showInterest('Chevrolet Malibu / Trax (Sedan/Car)')">Contact Oscar About This Car</button>
+        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-more">View Full Inventory at Dealership</a>
       </div>
     </div>
 
@@ -1267,6 +1267,8 @@ function showInterest(vehicleName) {
       break;
     }
   }
+  const msg = document.getElementById('message');
+  if (msg) msg.value = "Hi, I'm interested in the " + vehicleName + " I saw on your site.";
   document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
   setTimeout(() => document.getElementById('fname').focus(), 600);
 }
