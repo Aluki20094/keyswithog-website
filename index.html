@@ -284,9 +284,9 @@
   html.light-mode .mobile-menu-panel { background: var(--dark2); }
 
   @media (max-width: 768px) {
-    nav { padding: 1rem 1.25rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } section { padding: 3rem 1.25rem; }
+    nav { padding: 1rem 1.25rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } .theme-toggle { display: none; } section { padding: 3rem 1.25rem; }
     .hero { padding: 5rem 1.25rem 2.5rem; min-height: 90vh; }
-    .hero-bg { background-position: 35% center; }
+    .hero-bg { background-position: 58% center; }
     .hero h1 { font-size: clamp(2.8rem, 11vw, 4rem); margin-bottom: 1rem; }
     .hero p { font-size: 0.97rem; margin-bottom: 1.75rem; }
     .hero-actions { gap: 0.75rem; }
@@ -335,6 +335,21 @@
   }
   .theme-toggle:hover { background: rgba(255,255,255,0.14); }
   html.light-mode .theme-toggle { background: rgba(0,0,0,0.07); border-color: rgba(0,0,0,0.12); }
+
+  /* ── Floating CTA ── */
+  .float-cta {
+    position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 89;
+    background: var(--gold); color: var(--dark);
+    padding: 0.85rem 1.4rem; border-radius: 50px;
+    font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.92rem;
+    text-decoration: none; display: flex; align-items: center; gap: 0.5rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+    opacity: 0; visibility: hidden; transform: translateY(12px);
+    transition: opacity 0.35s, visibility 0.35s, transform 0.35s;
+    letter-spacing: 0.02em;
+  }
+  .float-cta.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+  .float-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
 
   /* ── Instagram Reel Embeds ── */
   .reels-embed-grid {
@@ -441,6 +456,9 @@
     <a href="#inventory" onclick="closeMenu()">Inventory</a>
     <a href="#social" onclick="closeMenu()">Reels</a>
     <a href="#contact" class="mobile-menu-cta" onclick="closeMenu()">Get in Touch →</a>
+    <button class="mobile-theme-toggle" onclick="toggleTheme()" style="margin-top:1.5rem; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); color:var(--text); padding:0.7rem 1rem; border-radius:var(--radius); font-family:'DM Sans',sans-serif; font-size:0.88rem; cursor:pointer; display:flex; align-items:center; gap:0.5rem; width:100%; justify-content:center;">
+      <span id="mobileThemeIcon">☀</span> Toggle Light / Dark
+    </button>
   </div>
 </div>
 
@@ -815,6 +833,8 @@
   </div>
 </section>
 
+<a href="#contact" class="float-cta" id="floatCta">✉ Get in Touch</a>
+
 <footer>
   <div class="footer-grid">
     <div>
@@ -957,17 +977,43 @@ function handleMenuOverlay(e) {
 function toggleTheme() {
   const isLight = document.documentElement.classList.toggle('light-mode');
   localStorage.setItem('theme', isLight ? 'light' : 'dark');
-  document.querySelector('.theme-toggle').textContent = isLight ? '🌙' : '☀';
+  const icon = isLight ? '🌙' : '☀';
+  const desktopBtn = document.querySelector('.theme-toggle');
+  const mobileIcon = document.getElementById('mobileThemeIcon');
+  if (desktopBtn) desktopBtn.textContent = icon;
+  if (mobileIcon) mobileIcon.textContent = icon;
 }
 (function() {
   if (localStorage.getItem('theme') === 'light') {
     document.documentElement.classList.add('light-mode');
     document.addEventListener('DOMContentLoaded', function() {
-      const btn = document.querySelector('.theme-toggle');
-      if (btn) btn.textContent = '🌙';
+      const desktopBtn = document.querySelector('.theme-toggle');
+      const mobileIcon = document.getElementById('mobileThemeIcon');
+      if (desktopBtn) desktopBtn.textContent = '🌙';
+      if (mobileIcon) mobileIcon.textContent = '🌙';
     });
   }
 })();
+
+// ── Floating CTA ──
+document.addEventListener('DOMContentLoaded', function() {
+  const floatCta = document.getElementById('floatCta');
+  const hero = document.querySelector('.hero');
+  const contact = document.getElementById('contact');
+  if (!floatCta || !hero || !contact) return;
+
+  const showObserver = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) floatCta.classList.add('visible');
+    else floatCta.classList.remove('visible');
+  }, { threshold: 0.1 });
+
+  const hideObserver = new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) floatCta.classList.remove('visible');
+  }, { threshold: 0.15 });
+
+  showObserver.observe(hero);
+  hideObserver.observe(contact);
+});
 
 function filterInventory(cat, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
