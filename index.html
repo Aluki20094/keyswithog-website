@@ -306,14 +306,16 @@
     .inventory-grid { grid-template-columns: 1fr; }
     .popup-box { padding: 2rem 1.5rem 1.5rem; } .popup-screens-wrap { min-height: 300px; }
     .reels-embed-grid { grid-template-columns: 1fr; }
-    .acc-section { padding: 0 !important; }
-    .acc-tab { display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 1.25rem; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.06em; border-bottom: 1px solid rgba(255,255,255,0.07); transition: color 0.2s; user-select: none; }
-    .acc-section.open .acc-tab { color: var(--gold); border-bottom-color: rgba(201,168,76,0.35); }
+    .acc-section { padding: 0 !important; margin: 0 !important; background: none !important; }
+    .acc-tab { display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 1.25rem; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.06em; background: var(--dark2); border-top: 1px solid rgba(255,255,255,0.06); transition: color 0.2s, background 0.2s; user-select: none; }
+    .acc-section:first-of-type .acc-tab { border-top: none; }
+    .acc-section.open .acc-tab { color: var(--gold); background: var(--dark3); }
     .acc-arrow { font-size: 0.65rem; color: var(--muted); transition: transform 0.3s, color 0.2s; }
     .acc-section.open .acc-arrow { transform: rotate(180deg); color: var(--gold); }
-    .acc-body { max-height: 0; overflow: hidden; transition: max-height 0.45s ease; padding: 2.5rem 1.25rem; }
-    html.light-mode .acc-tab { border-bottom-color: rgba(0,0,0,0.08); }
-    html.light-mode .acc-section.open .acc-tab { border-bottom-color: rgba(26,82,212,0.3); }
+    .acc-body { max-height: 0; overflow: hidden; transition: max-height 0.45s ease; }
+    .acc-inner { padding: 2.5rem 1.25rem 2rem; }
+    html.light-mode .acc-tab { background: var(--dark2); border-top-color: rgba(0,0,0,0.07); }
+    html.light-mode .acc-section.open .acc-tab { background: var(--dark3); }
   }
 
   /* ── Light Mode ── */
@@ -517,6 +519,7 @@
     <span class="acc-arrow">▼</span>
   </div>
   <div class="acc-body">
+    <div class="acc-inner">
     <div class="section-label">What I Offer</div>
     <div class="section-title">Everything You Need<br>to Drive Away Today</div>
     <p class="section-sub">From finding the right model to getting you approved — I handle it all from start to finish.</p>
@@ -525,6 +528,7 @@
       <div class="card"><div class="card-icon">💳</div><h3>All Credit Welcome</h3><p>First-time buyer? Bad credit? No credit? I've helped hundreds of people get approved when they thought they couldn't.</p></div>
       <div class="card"><div class="card-icon">🔄</div><h3>Trade-In Your Vehicle</h3><p>Get top dollar for your current car. I'll make the process fast, fair, and hassle-free so you walk out ahead.</p></div>
       <div class="card"><div class="card-icon">💵</div><h3>$100 Referral Program</h3><p>Know someone looking for a car? Send them my way. If they buy, I put $100 cash in your pocket. Simple as that.</p></div>
+    </div>
     </div>
   </div>
 </section>
@@ -535,6 +539,7 @@
     <span class="acc-arrow">▼</span>
   </div>
   <div class="acc-body">
+    <div class="acc-inner">
     <div class="why-grid">
       <div class="why-visual">
         <div class="avatar-ring"><img src="images/og-logo.jpg" alt="Keys with OG" /></div>
@@ -554,6 +559,7 @@
         </div>
       </div>
     </div>
+    </div><!-- /acc-inner -->
   </div>
 </section>
 
@@ -563,6 +569,7 @@
     <span class="acc-arrow">▼</span>
   </div>
   <div class="acc-body">
+    <div class="acc-inner">
     <div class="section-label">Special Programs</div>
     <div class="section-title">Built for Your Situation</div>
     <p class="section-sub">No matter where you're starting from, there's a path to getting you approved and driving.</p>
@@ -571,6 +578,7 @@
       <div class="program"><div class="program-tag">Trade-In</div><h3>Sell Your Car for Top Dollar</h3><p>Looking to upgrade? Oscar will assess your current vehicle and offer a competitive trade-in value that helps lower your monthly payment on your new Chevy.</p><a href="tel:12102602489" class="link">Call to get your estimate →</a></div>
       <div class="program"><div class="program-tag">Referral Bonus</div><h3>Earn $100 Cash</h3><p>Know someone in the market? Refer them to Oscar. When they purchase a vehicle, Oscar sends you $100 — no catch, no fine print.</p><a href="#contact" class="link">Submit a referral →</a></div>
     </div>
+    </div><!-- /acc-inner -->
   </div>
 </section>
 
