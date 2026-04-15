@@ -183,8 +183,10 @@
     background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
     display: flex; align-items: center; justify-content: center;
     padding: 1.25rem;
-    animation: fadeIn 0.3s ease;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.6s ease;
   }
+  .popup-overlay.visible { opacity: 1; pointer-events: auto; }
   .popup-overlay.hidden { display: none; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   .popup-box {
@@ -209,9 +211,8 @@
     overflow: hidden;
   }
   .popup-avatar img { width: 100%; height: 100%; object-fit: contain; }
-  .popup-screens-wrap { position: relative; min-height: 340px; }
-  .popup-screen { display: block; opacity: 0; pointer-events: none; position: absolute; top: 0; left: 0; width: 100%; text-align: center; transition: opacity 0.25s ease; }
-  .popup-screen.active { opacity: 1; pointer-events: auto; }
+  .popup-screen { display: none; text-align: center; }
+  .popup-screen.active { display: block; }
   .popup-screen h2 {
     font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem;
     letter-spacing: 0.04em; margin-bottom: 0.5rem;
@@ -304,7 +305,7 @@
     .social-cta-bar { flex-direction: column; text-align: center; }
     .social-cta-btns { justify-content: center; }
     .inventory-grid { grid-template-columns: 1fr; }
-    .popup-box { padding: 2rem 1.5rem 1.5rem; } .popup-screens-wrap { min-height: 300px; }
+    .popup-box { padding: 2rem 1.5rem 1.75rem; max-height: 88vh; overflow-y: auto; }
     .reels-embed-grid { grid-template-columns: 1fr; }
     .acc-section { padding: 0 !important; margin: 0 !important; background: none !important; }
     .acc-tab { display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 1.25rem; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.06em; background: var(--dark2); border-top: 1px solid rgba(255,255,255,0.06); transition: color 0.2s, background 0.2s; user-select: none; }
@@ -933,10 +934,18 @@ function showInterest(vehicleName) {
 let currentSlide = 0;
 const totalSlides = 2;
 
+// Show popup after 2s delay with fade-in
+setTimeout(function() {
+  const overlay = document.getElementById('welcomeOverlay');
+  if (overlay && !overlay.classList.contains('hidden')) {
+    overlay.classList.add('visible');
+  }
+}, 2000);
+
 function closePopup() {
   const overlay = document.getElementById('welcomeOverlay');
-  overlay.style.animation = 'fadeIn 0.2s ease reverse';
-  setTimeout(() => overlay.classList.add('hidden'), 180);
+  overlay.classList.remove('visible');
+  setTimeout(() => overlay.classList.add('hidden'), 600);
 }
 
 function showWelcomeBack() {
