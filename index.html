@@ -361,7 +361,7 @@
 
   /* ── Referral Station ── */
   .referral-section { background: var(--dark2); }
-  .referral-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 0; }
+  .referral-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
   .referral-how { padding-top: 0.5rem; }
   .referral-step { display: flex; gap: 1.25rem; align-items: flex-start; margin-bottom: 2.25rem; }
   .referral-step:last-child { margin-bottom: 0; }
@@ -374,21 +374,30 @@
   .referral-card h3 { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.35rem; }
   .referral-card-top { margin-bottom: 1.5rem; }
   .referral-card-top > p { color: var(--muted); font-size: 0.92rem; margin: 0; }
-  .referral-link-wrap { display: flex; gap: 0.6rem; margin-bottom: 1rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09); border-radius: var(--radius); padding: 0.7rem 1rem; align-items: center; }
-  .referral-link-display { flex: 1; font-size: 0.78rem; color: var(--muted); word-break: break-all; font-family: monospace; letter-spacing: 0; }
-  .referral-copy-btn { background: transparent; border: 1px solid rgba(255,255,255,0.18); color: var(--text); padding: 0.4rem 0.9rem; border-radius: var(--radius); font-size: 0.82rem; cursor: pointer; white-space: nowrap; transition: border-color 0.2s, color 0.2s; font-family: 'DM Sans', sans-serif; flex-shrink: 0; }
-  .referral-copy-btn:hover { border-color: var(--gold); color: var(--gold); }
+  /* Name inputs */
+  .ref-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.5rem; }
+  .ref-input-group { display: flex; flex-direction: column; gap: 0.35rem; }
+  .ref-input-group label { font-size: 0.79rem; font-weight: 500; color: var(--muted); letter-spacing: 0.04em; }
+  .ref-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: var(--text); padding: 0.72rem 0.9rem; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.95rem; transition: border-color 0.2s; width: 100%; }
+  .ref-input:focus { outline: none; border-color: var(--gold); background: rgba(255,255,255,0.07); }
+  .ref-input::placeholder { color: rgba(255,255,255,0.2); }
+  .ref-error { color: #e05252; font-size: 0.8rem; min-height: 1.2rem; margin-bottom: 0.6rem; }
   .referral-generate-btn { width: 100%; justify-content: center; font-size: 0.97rem; }
-  .referral-stats { display: flex; gap: 1rem; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.06); }
-  .referral-stat { text-align: center; flex: 1; background: rgba(255,255,255,0.03); border-radius: var(--radius); padding: 0.75rem 0.5rem; }
-  .referral-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--gold); letter-spacing: 0.04em; line-height: 1; }
-  .referral-stat-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.2rem; }
-  .referral-note { color: var(--muted); font-size: 0.77rem; text-align: center; margin-top: 0.85rem; line-height: 1.5; }
+  /* Code display */
+  .referral-code-box { background: rgba(240,165,0,0.06); border: 1px solid rgba(240,165,0,0.22); border-radius: var(--radius); padding: 1.5rem 1.25rem; text-align: center; margin-bottom: 1rem; }
+  .referral-code-label { font-size: 0.71rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .referral-code-text { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; letter-spacing: 0.14em; color: var(--gold); line-height: 1; margin-bottom: 1rem; }
+  .referral-copy-btn { background: var(--gold); border: none; color: var(--dark); padding: 0.6rem 1.5rem; border-radius: var(--radius); font-size: 0.88rem; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; }
+  .referral-copy-btn:hover { background: var(--gold-light); }
+  .referral-note { color: var(--muted); font-size: 0.77rem; text-align: center; margin-top: 0.75rem; line-height: 1.5; }
+  .ref-reset-btn { background: none; border: none; color: var(--muted); font-size: 0.79rem; cursor: pointer; font-family: 'DM Sans', sans-serif; padding: 0; text-decoration: underline; text-underline-offset: 3px; display: block; margin: 0.6rem auto 0; transition: color 0.2s; }
+  .ref-reset-btn:hover { color: var(--text); }
   .referral-toast { position: fixed; bottom: 5.5rem; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--dark3); border: 1px solid rgba(240,165,0,0.35); color: var(--text); padding: 0.6rem 1.4rem; border-radius: 50px; font-size: 0.88rem; z-index: 500; opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none; white-space: nowrap; }
   .referral-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   html.light-mode .referral-card { background: #fff; border-color: rgba(240,165,0,0.3); }
-  html.light-mode .referral-link-wrap { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.1); }
-  html.light-mode .referral-stat { background: rgba(0,0,0,0.03); }
+  html.light-mode .ref-input { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.14); color: var(--text); }
+  html.light-mode .ref-input:focus { border-color: var(--gold); background: rgba(0,0,0,0.07); }
+  html.light-mode .ref-input::placeholder { color: rgba(0,0,0,0.25); }
 
   /* ── Section Accordion ── */
   .acc-tab { display: none; }
@@ -429,6 +438,7 @@
     .popup-box { padding: 2rem 1.5rem 1.75rem; max-height: 88vh; overflow-y: auto; }
     .reels-embed-grid { grid-template-columns: 1fr; }
     .referral-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .ref-form-row { grid-template-columns: 1fr; }
     .acc-section { padding: 0 !important; margin: 0 !important; background: none !important; }
     .acc-tab { display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 1.25rem; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.06em; background: var(--dark2); border-top: 1px solid rgba(255,255,255,0.06); transition: color 0.2s, background 0.2s; user-select: none; }
     .acc-section:first-of-type .acc-tab { border-top: none; }
@@ -710,8 +720,8 @@
 <!-- ── Referral Station ── -->
 <section id="referral" class="referral-section">
   <div class="section-label">Earn Together</div>
-  <h2 class="section-title">Get Paid to<br>Send Friends</h2>
-  <p class="section-sub">Every time someone you refer buys from Oscar, you pocket $100 cash. Generate your personal link below and share it anywhere.</p>
+  <h2 class="section-title">Refer a Friend<br>&amp; Earn</h2>
+  <p class="section-sub">Send a friend Oscar's way, they buy a car, you get $100 cash. Generate your personal code below — no account needed.</p>
 
   <div class="referral-grid">
     <!-- Left: how it works -->
@@ -719,22 +729,22 @@
       <div class="referral-step">
         <div class="referral-step-num">01</div>
         <div>
-          <strong>Generate your link</strong>
-          <p>One click creates a unique referral link tied only to you — no account needed.</p>
+          <strong>Enter your name</strong>
+          <p>Your unique code is built from your name — personal and trackable every time.</p>
         </div>
       </div>
       <div class="referral-step">
         <div class="referral-step-num">02</div>
         <div>
-          <strong>Share it anywhere</strong>
-          <p>Text it to a friend, drop it in a group chat, post it on social. The more you share, the more you earn.</p>
+          <strong>Share your code</strong>
+          <p>Text it, post it, or drop it in a group chat. Tell your friend to give Oscar your code.</p>
         </div>
       </div>
       <div class="referral-step">
         <div class="referral-step-num">03</div>
         <div>
           <strong>Collect $100 cash</strong>
-          <p>When your referral buys a vehicle from Oscar, he puts $100 straight into your pocket. No catches, no fine print.</p>
+          <p>When your referral buys, Oscar puts $100 straight into your pocket. No catches, no fine print.</p>
         </div>
       </div>
     </div>
@@ -743,34 +753,41 @@
     <div class="referral-card">
       <div class="referral-card-top">
         <div class="referral-badge">💵 $100 Per Sale</div>
-        <h3>Your Referral Link</h3>
-        <p>Generate your personal link and start sharing in seconds.</p>
+        <h3>Your Referral Code</h3>
+        <p>Enter your name to generate your unique trackable code.</p>
       </div>
 
-      <div id="referralLinkWrap" class="referral-link-wrap" style="display:none;">
-        <span class="referral-link-display" id="referralLinkDisplay"></span>
-        <button class="referral-copy-btn" id="referralCopyBtn" onclick="copyReferralLink()">Copy</button>
-      </div>
-
-      <button class="btn-primary referral-generate-btn" id="referralGenerateBtn" onclick="generateReferralLink()">Generate My Link →</button>
-
-      <div class="referral-stats" id="referralStats" style="display:none;">
-        <div class="referral-stat">
-          <div class="referral-stat-num" id="statVisits">0</div>
-          <div class="referral-stat-label">Link Clicks</div>
+      <!-- State 1: name input form -->
+      <div id="refInputState">
+        <div class="ref-form-row">
+          <div class="ref-input-group">
+            <label for="refFirstName">First Name</label>
+            <input type="text" id="refFirstName" class="ref-input" placeholder="Juan" autocomplete="given-name" />
+          </div>
+          <div class="ref-input-group">
+            <label for="refLastName">Last Name</label>
+            <input type="text" id="refLastName" class="ref-input" placeholder="Anzures" autocomplete="family-name" />
+          </div>
         </div>
-        <div class="referral-stat">
-          <div class="referral-stat-num" id="statLeads">0</div>
-          <div class="referral-stat-label">Leads Sent</div>
-        </div>
+        <div class="ref-error" id="refError"></div>
+        <button class="btn-primary referral-generate-btn" onclick="generateReferralCode()">Generate My Referral Code →</button>
       </div>
 
-      <p class="referral-note" id="referralNote">No account needed. Your link is saved to this browser.</p>
+      <!-- State 2: code display -->
+      <div id="refCodeState" style="display:none;">
+        <div class="referral-code-box">
+          <div class="referral-code-label">Your Referral Code</div>
+          <div class="referral-code-text" id="refCodeText"></div>
+          <button class="referral-copy-btn" id="refCopyBtn" onclick="copyReferralCode()">Copy Code</button>
+        </div>
+        <p class="referral-note">Saved to this browser. Give this code to anyone interested in buying — Oscar will take care of the rest.</p>
+        <button class="ref-reset-btn" onclick="resetReferralCode()">← Use a different name</button>
+      </div>
     </div>
   </div>
 </section>
 
-<div class="referral-toast" id="referralToast">✅ Copied to clipboard!</div>
+<div class="referral-toast" id="referralToast">✅ Code copied!</div>
 
 <section id="inventory" class="inventory-section">
   <div class="section-label">Current Lineup</div>
@@ -1097,96 +1114,126 @@
 <script>
 // ── Referral Engine ──
 (function() {
-  var MY_CODE_KEY  = 'og_ref_code';
-  var STATS_KEY    = 'og_ref_stats';
+  var STORAGE_KEY = 'referral_code';
+  var FORMSPREE   = 'https://formspree.io/f/mnjljadw';
 
-  function makeCode() {
-    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    var out = '';
-    for (var i = 0; i < 6; i++) out += chars[Math.floor(Math.random() * chars.length)];
-    return out;
+  function sanitize(str) {
+    return str.replace(/[^a-zA-Z]/g, '').toUpperCase();
   }
 
-  function getMyCode() {
-    var c = localStorage.getItem(MY_CODE_KEY);
-    if (!c) { c = makeCode(); localStorage.setItem(MY_CODE_KEY, c); }
-    return c;
+  function buildCode(firstName, lastName) {
+    var f   = sanitize(firstName).substring(0, 4).padEnd(4, 'X');
+    var l   = sanitize(lastName).substring(0, 3).padEnd(3, 'X');
+    var num = Math.floor(1000 + Math.random() * 9000);
+    return f + l + num;
   }
 
-  function getStats() {
-    try { return JSON.parse(localStorage.getItem(STATS_KEY)) || { visits: 0, leads: 0 }; }
-    catch(e) { return { visits: 0, leads: 0 }; }
+  function formatDate(d) {
+    var p = function(n) { return n < 10 ? '0' + n : '' + n; };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) +
+           ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
   }
 
-  function saveStats(s) { localStorage.setItem(STATS_KEY, JSON.stringify(s)); }
+  function submitToFormspree(firstName, lastName, code) {
+    var payload = {
+      firstName:    firstName,
+      lastName:     lastName,
+      referralCode: code,
+      date:         formatDate(new Date())
+    };
+    fetch(FORMSPREE, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body:    JSON.stringify(payload)
+    })
+    .then(function(res) {
+      if (res.ok) {
+        console.log('[Referral] Submitted to Formspree ✅', payload);
+      } else {
+        res.json().then(function(d) { console.error('[Referral] Formspree error:', d); });
+      }
+    })
+    .catch(function(err) { console.error('[Referral] Network error:', err); });
+  }
 
-  // Track inbound ref param, clean URL
-  (function trackInbound() {
-    var params = new URLSearchParams(window.location.search);
-    var ref = params.get('ref');
-    if (ref && ref !== localStorage.getItem(MY_CODE_KEY)) {
-      sessionStorage.setItem('referred_by', ref);
-      history.replaceState(null, '', window.location.pathname);
-    }
-  })();
-
-  window._ref = {
-    getMyCode: getMyCode,
-    getLink: function() {
-      return window.location.origin + window.location.pathname + '?ref=' + getMyCode();
-    },
-    getStats: getStats,
-    saveStats: saveStats,
-    getReferredBy: function() { return sessionStorage.getItem('referred_by'); },
-    updateDisplay: function() {
-      var s = getStats();
-      var v = document.getElementById('statVisits');
-      var l = document.getElementById('statLeads');
-      if (v) v.textContent = s.visits;
-      if (l) l.textContent = s.leads;
-    }
+  window._refSystem = {
+    buildCode:         buildCode,
+    submitToFormspree: submitToFormspree,
+    getCode:  function() { return localStorage.getItem(STORAGE_KEY); },
+    saveCode: function(c) { localStorage.setItem(STORAGE_KEY, c); },
+    clearCode: function() { localStorage.removeItem(STORAGE_KEY); }
   };
 
-  // If returning user already has a code, restore their card
+  // Restore card if returning visitor already has a code
   document.addEventListener('DOMContentLoaded', function() {
-    if (localStorage.getItem(MY_CODE_KEY)) _showReferralLink();
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) _showCode(saved);
   });
 })();
 
-function _showReferralLink() {
-  var link = window._ref.getLink();
-  var wrap = document.getElementById('referralLinkWrap');
-  var disp = document.getElementById('referralLinkDisplay');
-  var btn  = document.getElementById('referralGenerateBtn');
-  var stats = document.getElementById('referralStats');
-  var note  = document.getElementById('referralNote');
-  if (disp)  disp.textContent  = link;
-  if (wrap)  wrap.style.display = 'flex';
-  if (btn)   btn.style.display  = 'none';
-  if (stats) stats.style.display = 'flex';
-  if (note)  note.textContent   = 'Saved to this browser. Share to earn $100 per sale.';
-  _ref.updateDisplay();
+function generateReferralCode() {
+  var fn    = document.getElementById('refFirstName').value.trim();
+  var ln    = document.getElementById('refLastName').value.trim();
+  var errEl = document.getElementById('refError');
+
+  if (!fn || !ln) {
+    errEl.textContent = 'Please enter both your first and last name.';
+    return;
+  }
+  if (!fn.match(/[a-zA-Z]/) || !ln.match(/[a-zA-Z]/)) {
+    errEl.textContent = 'Names must contain at least one letter.';
+    return;
+  }
+  errEl.textContent = '';
+
+  var code = _refSystem.buildCode(fn, ln);
+  _refSystem.saveCode(code);
+  _refSystem.submitToFormspree(fn, ln, code);
+  _showCode(code);
 }
 
-function generateReferralLink() { _showReferralLink(); }
+function _showCode(code) {
+  var inputEl = document.getElementById('refInputState');
+  var codeEl  = document.getElementById('refCodeState');
+  var textEl  = document.getElementById('refCodeText');
+  if (inputEl) inputEl.style.display = 'none';
+  if (codeEl)  codeEl.style.display  = 'block';
+  if (textEl)  textEl.textContent     = code;
+}
 
-function copyReferralLink() {
-  var link = _ref.getLink();
-  var btn  = document.getElementById('referralCopyBtn');
+function copyReferralCode() {
+  var code = _refSystem.getCode();
+  if (!code) return;
+  var btn  = document.getElementById('refCopyBtn');
   var done = function() {
     var toast = document.getElementById('referralToast');
-    if (toast) { toast.classList.add('show'); setTimeout(function(){ toast.classList.remove('show'); }, 2400); }
-    if (btn) { btn.textContent = 'Copied!'; setTimeout(function(){ btn.textContent = 'Copy'; }, 2000); }
+    if (toast) { toast.classList.add('show'); setTimeout(function() { toast.classList.remove('show'); }, 2400); }
+    if (btn)   { btn.textContent = '✅ Copied!'; setTimeout(function() { btn.textContent = 'Copy Code'; }, 2000); }
   };
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(link).then(done).catch(function() { _fallbackCopy(link); done(); });
-  } else { _fallbackCopy(link); done(); }
+    navigator.clipboard.writeText(code).then(done).catch(function() { _fallbackCopy(code); done(); });
+  } else { _fallbackCopy(code); done(); }
+}
+
+function resetReferralCode() {
+  _refSystem.clearCode();
+  var inputEl = document.getElementById('refInputState');
+  var codeEl  = document.getElementById('refCodeState');
+  var fn      = document.getElementById('refFirstName');
+  var ln      = document.getElementById('refLastName');
+  if (codeEl)  codeEl.style.display  = 'none';
+  if (inputEl) inputEl.style.display = 'block';
+  if (fn) { fn.value = ''; fn.focus(); }
+  if (ln)   ln.value = '';
 }
 
 function _fallbackCopy(text) {
   var ta = document.createElement('textarea');
-  ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
-  document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
   document.body.removeChild(ta);
 }
 
@@ -1198,21 +1245,12 @@ function handleSubmit() {
     return;
   }
 
-  // Record referral lead if this visitor came through a referral link
-  if (window._ref) {
-    var refBy = _ref.getReferredBy();
-    var note  = document.getElementById('referralSubmitNote');
-    if (refBy && note) {
-      note.textContent = '🎉 Referred by code: ' + refBy + ' — Oscar will apply the $100 referral bonus!';
-      note.style.display = 'block';
-    }
-    // If the submitter also has their own referral code, log the lead in their stats
-    if (localStorage.getItem('og_ref_code')) {
-      var s = _ref.getStats();
-      s.leads = (s.leads || 0) + 1;
-      _ref.saveStats(s);
-      _ref.updateDisplay();
-    }
+  // Surface referral code in the form note so Oscar sees who referred this lead
+  var myCode = localStorage.getItem('referral_code');
+  var refNote = document.getElementById('referralSubmitNote');
+  if (myCode && refNote) {
+    refNote.textContent = '🎉 Referral code on file: ' + myCode + ' — Oscar will apply the $100 bonus.';
+    refNote.style.display = 'block';
   }
 
   const btn = document.querySelector('.form-submit');
