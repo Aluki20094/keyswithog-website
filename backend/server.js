@@ -25,6 +25,8 @@ app.use(cors({
     'http://127.0.0.1:8000',
     'https://www.keyswithog.com',
     'https://keyswithog.com',
+    'https://darkgreen-cassowary-344122.hostingersite.com',
+    'http://darkgreen-cassowary-344122.hostingersite.com',
   ],
   credentials: true,
 }));
