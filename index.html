@@ -1125,6 +1125,16 @@
 </div>
 
 <script>
+// ── Scroll to top on load (prevents browser scroll-restoration & Instagram embed scroll) ──
+if (window.history.scrollRestoration) {
+  window.history.scrollRestoration = 'manual';
+}
+window.addEventListener('load', function() {
+  if (!window.location.hash) {
+    window.scrollTo(0, 0);
+  }
+});
+
 // ── Referral Engine ──
 (function() {
   var STORAGE_KEY = 'referral_code';
