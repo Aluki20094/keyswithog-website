@@ -1101,9 +1101,28 @@
   <div class="footer-bottom">
     <span>© 2025 Oscar Gonzalez · AT Price Chevrolet</span>
     <span>Mon–Fri 8am–7pm · Sat 9am–6pm · Tue Closed</span>
-    <a href="#privacy" style="color:var(--muted); font-size:0.82rem; text-decoration:none;">Privacy Policy</a>
+    <div style="display: flex; gap: 1rem; align-items: center;">
+      <a href="#privacy" style="color:var(--muted); font-size:0.82rem; text-decoration:none;">Privacy Policy</a>
+      <span style="color: rgba(255,255,255,0.1);">|</span>
+      <button onclick="openAdminLogin()" style="background: none; border: none; color: rgba(255,255,255,0.25); font-size: 0.75rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; transition: color 0.2s; padding: 0;" onmouseover="this.style.color='rgba(255,255,255,0.5)'" onmouseout="this.style.color='rgba(255,255,255,0.25)'">Admin</button>
+    </div>
   </div>
 </footer>
+
+<!-- ── Admin Login Modal ── -->
+<div class="popup-overlay" id="adminLoginModal">
+  <div class="popup-box">
+    <button onclick="closeAdminLogin()" class="popup-close">✕</button>
+    <div class="popup-screen active" style="text-align: center;">
+      <h2 style="margin-bottom: 1rem;">Admin Access</h2>
+      <p style="color: var(--muted); font-size: 0.92rem; margin-bottom: 1.5rem;">Enter the admin password to access the dashboard.</p>
+      <input type="password" id="adminPassword" placeholder="Enter password" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.95rem;" />
+      <div id="adminError" style="color: #ff6b6b; font-size: 0.85rem; margin-bottom: 1rem; display: none;"></div>
+      <button onclick="verifyAdminPassword()" class="popup-btn-yes" style="width: 100%; margin-bottom: 0.5rem;">Access Dashboard</button>
+      <button onclick="closeAdminLogin()" style="width: 100%; background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,0.1); padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; transition: all 0.2s;">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ── Referral Engine ──
@@ -1165,9 +1184,9 @@
   });
 })();
 
-function generateReferralCode() {
-  var fn    = document.getElementById('refFirstName').value.trim();
-  var ln    = document.getElementById('refLastName').value.trim();
+async function generateReferralCode() {
+  var fn = document.getElementById('refFirstName').value.trim();
+  var ln = document.getElementById('refLastName').value.trim();
   var errEl = document.getElementById('refError');
 
   if (!fn || !ln) {
@@ -1180,10 +1199,31 @@ function generateReferralCode() {
   }
   errEl.textContent = '';
 
-  var code = _refSystem.buildCode(fn, ln);
-  _refSystem.saveCode(code);
-  _refSystem.submitToFormspree(fn, ln, code);
-  _showCode(code);
+  try {
+    // POST to backend to generate referral code
+    const response = await fetch('http://localhost:5001/api/generate-referral', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        first_name: fn,
+        last_name: ln,
+        email: fn.toLowerCase() + '.' + ln.toLowerCase() + '@referral.keysog', // Use name-based email
+      }),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      const code = result.data.referral_code;
+      _refSystem.saveCode(code);
+      _showCode(code);
+    } else {
+      errEl.textContent = 'Error: ' + result.error;
+    }
+  } catch (error) {
+    errEl.textContent = 'Error generating code. Make sure the backend is running at http://localhost:5000';
+    console.error('Error:', error);
+  }
 }
 
 function _showCode(code) {
@@ -1231,26 +1271,80 @@ function _fallbackCopy(text) {
   document.body.removeChild(ta);
 }
 
-function handleSubmit() {
+async function handleSubmit() {
   const fname = document.getElementById('fname').value.trim();
+  const lname = document.getElementById('lname').value.trim();
   const phone = document.getElementById('phone').value.trim();
-  if (!fname || !phone) {
-    alert('Please enter your name and phone number so Oscar can reach you!');
+  const email = document.getElementById('email').value.trim();
+  const interest = document.getElementById('interest').value.trim();
+  const credit = document.getElementById('credit').value.trim();
+  const message = document.getElementById('message').value.trim();
+
+  // Validate required fields
+  if (!fname || !lname || !phone || !email) {
+    alert('Please enter your first name, last name, email, and phone number!');
     return;
   }
 
-  // Surface referral code in the form note so Oscar sees who referred this lead
-  var myCode = localStorage.getItem('referral_code');
-  var refNote = document.getElementById('referralSubmitNote');
-  if (myCode && refNote) {
-    refNote.textContent = '🎉 Referral code on file: ' + myCode + ' — Oscar will apply the $100 bonus.';
-    refNote.style.display = 'block';
-  }
-
   const btn = document.querySelector('.form-submit');
-  btn.textContent = '✅ Sent! Oscar will reach out shortly.';
-  btn.style.background = '#2ECC71';
-  btn.style.cursor = 'default';
+  btn.disabled = true;
+  btn.textContent = '⏳ Sending...';
+
+  try {
+    // Get referral code if available
+    const referralCode = localStorage.getItem('referral_code');
+
+    // POST to backend
+    const response = await fetch('http://localhost:5001/api/submit-contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        first_name: fname,
+        last_name: lname,
+        phone: phone,
+        email: email,
+        interest: interest || null,
+        credit_situation: credit || null,
+        message: message || null,
+        referral_code: referralCode || null,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      btn.textContent = '✅ Sent! Oscar will reach out shortly.';
+      btn.style.background = '#2ECC71';
+      btn.style.cursor = 'default';
+
+      // Show referral note
+      var refNote = document.getElementById('referralSubmitNote');
+      if (referralCode && refNote) {
+        refNote.textContent = '🎉 Referral code on file: ' + referralCode + ' — Oscar will apply the $100 bonus.';
+        refNote.style.display = 'block';
+      }
+
+      // Clear form
+      setTimeout(() => {
+        document.getElementById('fname').value = '';
+        document.getElementById('lname').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('interest').value = '';
+        document.getElementById('credit').value = '';
+        document.getElementById('message').value = '';
+      }, 2000);
+    } else {
+      alert('Error: ' + result.error);
+      btn.disabled = false;
+      btn.textContent = '📞 Send My Info to Oscar';
+    }
+  } catch (error) {
+    alert('Error submitting form. Make sure the backend is running at http://localhost:5000');
+    btn.disabled = false;
+    btn.textContent = '📞 Send My Info to Oscar';
+    console.error('Submit error:', error);
+  }
 }
 
 function showInterest(vehicleName) {
@@ -1381,6 +1475,76 @@ function toggleTheme() {
   }
 })();
 
+// ── Admin Login ──
+function openAdminLogin() {
+  const modal = document.getElementById('adminLoginModal');
+  modal.classList.remove('hidden');
+  setTimeout(() => modal.classList.add('visible'), 10);
+  document.getElementById('adminPassword').value = '';
+  document.getElementById('adminError').style.display = 'none';
+  document.getElementById('adminPassword').focus();
+}
+
+function closeAdminLogin() {
+  const modal = document.getElementById('adminLoginModal');
+  modal.classList.remove('visible');
+  setTimeout(() => modal.classList.add('hidden'), 600);
+}
+
+function verifyAdminPassword() {
+  const password = document.getElementById('adminPassword').value;
+  const errorEl = document.getElementById('adminError');
+
+  if (!password) {
+    errorEl.textContent = 'Please enter a password';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  // Send password to backend to verify
+  fetch('http://localhost:5001/admin/verify-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: password })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      // Store password in session and redirect to admin dashboard
+      sessionStorage.setItem('adminPassword', password);
+      window.location.href = `http://localhost:5001/admin/dashboard?password=${encodeURIComponent(password)}`;
+    } else {
+      errorEl.textContent = 'Incorrect password. Try again.';
+      errorEl.style.display = 'block';
+      document.getElementById('adminPassword').select();
+    }
+  })
+  .catch(err => {
+    errorEl.textContent = 'Connection error. Is the backend running?';
+    errorEl.style.display = 'block';
+  });
+}
+
+// Allow Enter key to submit password
+document.addEventListener('DOMContentLoaded', function() {
+  const passwordInput = document.getElementById('adminPassword');
+  if (passwordInput) {
+    passwordInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') verifyAdminPassword();
+    });
+  }
+});
+
+// Close admin modal on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('adminLoginModal');
+    if (modal && modal.classList.contains('visible')) {
+      closeAdminLogin();
+    }
+  }
+});
+
 // ── Floating CTA ──
 document.addEventListener('DOMContentLoaded', function() {
   const floatCta = document.getElementById('floatCta');
@@ -1432,13 +1596,70 @@ function filterInventory(cat, btn) {
   });
 }
 
-// ── Scroll-to-top on mobile load ──
-if (window.innerWidth <= 768) {
-  window.scrollTo(0, 0);
-  document.addEventListener('DOMContentLoaded', function() {
-    window.scrollTo(0, 0);
-  });
+// ── Inventory loading from backend ──
+async function loadInventoryFromBackend() {
+  try {
+    const response = await fetch('http://localhost:5001/api/inventory');
+    const result = await response.json();
+
+    if (result.success && result.data && result.data.length > 0) {
+      // Populate inventory grid with backend data
+      const inventoryGrid = document.getElementById('inventoryGrid');
+      if (inventoryGrid) {
+        inventoryGrid.innerHTML = result.data.map(vehicle => `
+          <div class="vehicle-card" data-cat="${vehicle.type}">
+            <div class="vehicle-img">
+              <img src="${vehicle.image_url || 'images/placeholder.jpg'}" alt="${vehicle.name}" loading="lazy" />
+              <div class="vehicle-img-overlay"></div>
+            </div>
+            <div class="vehicle-body">
+              <div class="vehicle-cat ${vehicle.type}">${formatVehicleType(vehicle.type)}</div>
+              <div class="vehicle-name">${vehicle.name}</div>
+              <div class="vehicle-tagline">${vehicle.tagline || ''}</div>
+              <ul class="vehicle-highlights">
+                ${(vehicle.highlights || []).map(h => `<li>${h}</li>`).join('')}
+              </ul>
+              <div class="vehicle-price">${vehicle.price} <span>MSRP</span></div>
+            </div>
+            <div class="vehicle-footer">
+              <button class="btn-interested" onclick="showInterest('${vehicle.name}')">Contact Oscar About This Car</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Update interest select options
+      const interestSelect = document.getElementById('interest');
+      if (interestSelect) {
+        const currentValue = interestSelect.value;
+        interestSelect.innerHTML = '<option value="">Select a vehicle type...</option>' +
+          result.data.map(v => `<option>${v.name}</option>`).join('') +
+          '<option>Not sure — I need help deciding</option>';
+        if (currentValue) interestSelect.value = currentValue;
+      }
+    }
+  } catch (error) {
+    console.warn('Could not load inventory from backend, using defaults:', error.message);
+    // Fall back to static inventory if backend unavailable
+  }
 }
+
+function formatVehicleType(type) {
+  const typeMap = {
+    'truck': 'Truck',
+    'suv': 'SUV',
+    'suv-full': 'Full-Size SUV',
+    'compact': 'Compact SUV',
+    'sedan': 'Sedan'
+  };
+  return typeMap[type] || type;
+}
+
+// Load inventory when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  loadInventoryFromBackend();
+});
+
 
 </script>
 </body>

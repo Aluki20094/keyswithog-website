@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh repo:*)",
+      "WebFetch(domain:www.edmunds.com)",
+      "WebFetch(domain:www.thecarconnection.com)"
+    ]
+  }
+}

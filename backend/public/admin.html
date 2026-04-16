@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keys with OG – Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --dark: #080808;
+      --dark2: #0d0d0d;
+      --blue: #1A52D4;
+      --blue-dark: #0d2fa8;
+      --gold: #C9A84C;
+      --gold-light: #e6c680;
+      --text: #fff;
+      --muted: rgba(255,255,255,0.65);
+      --border: rgba(255,255,255,0.08);
+      --radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* ── Header ── */
+    header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+
+    header h1 span {
+      color: var(--gold);
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-btn {
+      padding: 1rem 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--gold);
+    }
+
+    .tab-btn.active {
+      color: var(--text);
+      border-bottom-color: var(--gold);
+    }
+
+    /* ── Tab Content ── */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--dark2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .card h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .card > p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── Stats Grid ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--dark2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.03);
+    }
+
+    .stat-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 0.05em;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    /* ── Table ── */
+    .table-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      padding: 1.25rem;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.95rem;
+    }
+
+    tr:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    td strong {
+      color: var(--text);
+    }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .badge-email-sent {
+      background: rgba(74, 160, 80, 0.2);
+      color: #4aa050;
+    }
+
+    .badge-pending {
+      background: rgba(240, 165, 0, 0.2);
+      color: #ffa500;
+    }
+
+    .badge-truck {
+      background: rgba(26, 82, 212, 0.2);
+      color: var(--blue);
+    }
+
+    .badge-suv {
+      background: rgba(201, 168, 76, 0.2);
+      color: var(--gold);
+    }
+
+    .badge-suv-full {
+      background: rgba(201, 168, 76, 0.2);
+      color: var(--gold);
+    }
+
+    .badge-compact {
+      background: rgba(150, 150, 150, 0.2);
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Buttons ── */
+    .action-btn {
+      padding: 0.75rem 1.25rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--blue);
+      color: var(--text);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .action-btn:hover {
+      background: var(--blue-dark);
+      transform: translateY(-2px);
+    }
+
+    .action-btn:active {
+      transform: translateY(0);
+    }
+
+    .action-btn.secondary {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+    }
+
+    .action-btn.secondary:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: var(--muted);
+    }
+
+    .action-btn.sync-btn {
+      background: var(--gold);
+      color: var(--dark);
+    }
+
+    .action-btn.sync-btn:hover {
+      background: var(--gold-light);
+    }
+
+    /* ── Forms ── */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.875rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: rgba(255,255,255,0.06);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--muted);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    /* ── Button Group ── */
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* ── Status Messages ── */
+    .error {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      color: #ff9b9b;
+      padding: 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .success {
+      background: rgba(74, 160, 80, 0.1);
+      border: 1px solid rgba(74, 160, 80, 0.3);
+      color: #7fd89f;
+      padding: 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: var(--muted);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+    }
+
+    /* ── Modal ── */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+
+    .modal.open {
+      display: flex;
+      animation: fadeInModal 0.3s ease;
+    }
+
+    @keyframes fadeInModal {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: var(--dark2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: slideUpModal 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes slideUpModal {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-close {
+      float: right;
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: var(--muted);
+      border: none;
+      background: none;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .modal-close:hover {
+      color: var(--gold);
+    }
+
+    .modal-content h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.05em;
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-content p {
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    /* ── Sync Status ── */
+    #syncStatus {
+      margin: 1.5rem 0;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.75rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .stat-value {
+        font-size: 1.8rem;
+      }
+
+      .tabs {
+        gap: 1rem;
+      }
+
+      .tab-btn {
+        padding: 0.75rem 0;
+        font-size: 0.85rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      table {
+        font-size: 0.85rem;
+      }
+
+      th, td {
+        padding: 0.875rem;
+      }
+
+      .action-btn {
+        padding: 0.65rem 1rem;
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .table-wrapper {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 0;
+      }
+
+      table {
+        font-size: 0.8rem;
+      }
+
+      th, td {
+        padding: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Keys<span>withOG</span></h1>
+      <p>Admin Dashboard · Manage submissions, referrals & inventory</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('submissions')">Submissions</button>
+      <button class="tab-btn" onclick="switchTab('referrals')">Referrals</button>
+      <button class="tab-btn" onclick="switchTab('inventory')">Inventory</button>
+    </div>
+
+    <!-- ── Submissions Tab ── -->
+    <div id="submissions" class="tab-content active">
+      <div class="card">
+        <h2>Contact Submissions</h2>
+        <p>Recent inquiries from potential customers</p>
+        <div class="table-wrapper">
+          <div id="submissionsContainer" class="loading">Loading submissions...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Referrals Tab ── -->
+    <div id="referrals" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="statTotalReferrers">0</div>
+          <div class="stat-label">Total Referrers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statTotalReferrals">0</div>
+          <div class="stat-label">Total Referrals</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statTotalPayouts">$0</div>
+          <div class="stat-label">Total Payouts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statAvgReferrals">0</div>
+          <div class="stat-label">Avg per Person</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Referral Codes</h2>
+        <p>Track active referral codes and payouts</p>
+        <div class="table-wrapper">
+          <div id="referralsContainer" class="loading">Loading referrals...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Inventory Tab ── -->
+    <div id="inventory" class="tab-content">
+      <div class="card">
+        <h2>Vehicle Inventory</h2>
+        <p>Manage vehicle listings from AT Price Chevrolet</p>
+        <button class="action-btn sync-btn" onclick="syncInventory()" style="margin-bottom: 1.5rem;">
+          ↻ Sync from AT Price Chevrolet
+        </button>
+        <div id="syncStatus"></div>
+        <div class="table-wrapper">
+          <div id="inventoryContainer" class="loading">Loading inventory...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for submission details -->
+  <div id="submissionModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <h2>Submission Details</h2>
+      <div id="modalBody" style="margin-top: 1.5rem;"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = '/admin/api';
+    const ADMIN_PASSWORD = new URLSearchParams(window.location.search).get('password') || '';
+
+    function getAdminHeaders() {
+      return {
+        'Content-Type': 'application/json',
+        'X-Admin-Password': ADMIN_PASSWORD,
+      };
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+      document.getElementById(tab).classList.add('active');
+      event.target.classList.add('active');
+
+      if (tab === 'submissions') loadSubmissions();
+      else if (tab === 'referrals') loadReferrals();
+      else if (tab === 'inventory') loadInventory();
+    }
+
+    async function loadSubmissions() {
+      const container = document.getElementById('submissionsContainer');
+      try {
+        const response = await fetch(`${API_BASE}/submissions?limit=50`, {
+          headers: getAdminHeaders(),
+        });
+        const result = await response.json();
+
+        if (!result.success) {
+          container.innerHTML = `<div class="error">${result.error}</div>`;
+          return;
+        }
+
+        if (result.data.length === 0) {
+          container.innerHTML = '<div class="empty-state">No submissions yet</div>';
+          return;
+        }
+
+        let html = '<table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Interest</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody>';
+
+        result.data.forEach(sub => {
+          const date = new Date(sub.created_at).toLocaleDateString();
+          const emailStatus = sub.email_sent ? '<span class="badge badge-email-sent">Sent</span>' : '<span class="badge badge-pending">Pending</span>';
+
+          html += `
+            <tr>
+              <td><strong>${sub.first_name} ${sub.last_name}</strong></td>
+              <td>${sub.email}</td>
+              <td>${sub.phone}</td>
+              <td>${sub.interest || '—'}</td>
+              <td>${emailStatus}</td>
+              <td>${date}</td>
+              <td><button class="action-btn secondary" onclick="viewSubmission(${sub.id})">View</button></td>
+            </tr>
+          `;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+      } catch (error) {
+        container.innerHTML = `<div class="error">Error loading submissions: ${error.message}</div>`;
+      }
+    }
+
+    async function viewSubmission(id) {
+      try {
+        const response = await fetch(`${API_BASE}/submissions/${id}`, {
+          headers: getAdminHeaders(),
+        });
+        const result = await response.json();
+
+        const sub = result.data;
+        const date = new Date(sub.created_at).toLocaleString();
+
+        let html = `
+          <div class="form-group">
+            <label>Name:</label>
+            <p><strong>${sub.first_name} ${sub.last_name}</strong></p>
+          </div>
+          <div class="form-group">
+            <label>Email:</label>
+            <p><a href="mailto:${sub.email}" style="color: var(--gold); text-decoration: none;">${sub.email}</a></p>
+          </div>
+          <div class="form-group">
+            <label>Phone:</label>
+            <p><a href="tel:${sub.phone}" style="color: var(--gold); text-decoration: none;">${sub.phone}</a></p>
+          </div>
+          <div class="form-group">
+            <label>Vehicle Interest:</label>
+            <p>${sub.interest || '—'}</p>
+          </div>
+          <div class="form-group">
+            <label>Credit Situation:</label>
+            <p>${sub.credit_situation || '—'}</p>
+          </div>
+          <div class="form-group">
+            <label>Message:</label>
+            <p>${sub.message || '—'}</p>
+          </div>
+          <div class="form-group">
+            <label>Referral Code (if used):</label>
+            <p><code style="background: rgba(255,255,255,0.05); padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.85rem;">${sub.referral_code || '—'}</code></p>
+          </div>
+          <div class="form-group">
+            <label>Submitted:</label>
+            <p>${date}</p>
+          </div>
+          <div class="form-group">
+            <label>Your Notes:</label>
+            <textarea id="noteInput" placeholder="Add internal notes about this lead...">${sub.notes || ''}</textarea>
+          </div>
+          <div class="button-group">
+            <button class="action-btn" onclick="saveNotes(${id})">Save Notes</button>
+            <button class="action-btn secondary" onclick="closeModal()">Close</button>
+          </div>
+        `;
+
+        document.getElementById('modalBody').innerHTML = html;
+        document.getElementById('submissionModal').classList.add('open');
+      } catch (error) {
+        alert('Error loading submission: ' + error.message);
+      }
+    }
+
+    async function saveNotes(id) {
+      const notes = document.getElementById('noteInput').value;
+      try {
+        const response = await fetch(`${API_BASE}/submissions/${id}/note`, {
+          method: 'POST',
+          headers: getAdminHeaders(),
+          body: JSON.stringify({ notes }),
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          alert('Notes saved!');
+          closeModal();
+          loadSubmissions();
+        } else {
+          alert('Error: ' + result.error);
+        }
+      } catch (error) {
+        alert('Error saving notes: ' + error.message);
+      }
+    }
+
+    async function loadReferrals() {
+      const container = document.getElementById('referralsContainer');
+      try {
+        const response = await fetch(`${API_BASE}/referrals`, {
+          headers: getAdminHeaders(),
+        });
+        const result = await response.json();
+
+        if (result.stats) {
+          document.getElementById('statTotalReferrers').textContent = result.stats.total_referrers || 0;
+          document.getElementById('statTotalReferrals').textContent = result.stats.total_referrals || 0;
+          document.getElementById('statTotalPayouts').textContent = '$' + (parseFloat(result.stats.total_payouts || 0).toFixed(2));
+          const avgReferrals = parseFloat(result.stats.avg_referrals_per_person || 0);
+          document.getElementById('statAvgReferrals').textContent = isNaN(avgReferrals) ? '0' : avgReferrals.toFixed(1);
+        }
+
+        if (!result.success) {
+          container.innerHTML = `<div class="error">${result.error}</div>`;
+          return;
+        }
+
+        if (result.data.length === 0) {
+          container.innerHTML = '<div class="empty-state">No referral codes generated yet</div>';
+          return;
+        }
+
+        let html = '<table><thead><tr><th>Name</th><th>Email</th><th>Code</th><th>Referrals</th><th>Payout</th><th>Created</th></tr></thead><tbody>';
+
+        result.data.forEach(ref => {
+          const date = new Date(ref.created_at).toLocaleDateString();
+
+          html += `
+            <tr>
+              <td><strong>${ref.name}</strong></td>
+              <td>${ref.email}</td>
+              <td><code style="background: rgba(255,255,255,0.05); padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.85rem;">${ref.referral_code}</code></td>
+              <td>${ref.referral_count}</td>
+              <td><strong style="color: var(--gold);">$${parseFloat(ref.payout_total).toFixed(2)}</strong></td>
+              <td>${date}</td>
+            </tr>
+          `;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+      } catch (error) {
+        container.innerHTML = `<div class="error">Error loading referrals: ${error.message}</div>`;
+      }
+    }
+
+    async function loadInventory() {
+      const container = document.getElementById('inventoryContainer');
+      try {
+        const response = await fetch(`${API_BASE}/inventory`);
+        const result = await response.json();
+
+        if (!result.success) {
+          container.innerHTML = `<div class="error">${result.error}</div>`;
+          return;
+        }
+
+        if (result.data.length === 0) {
+          container.innerHTML = '<div class="empty-state">No vehicles in inventory. Click "Sync from AT Price Chevrolet" to load vehicles.</div>';
+          return;
+        }
+
+        let html = '<table><thead><tr><th>Name</th><th>Type</th><th>Price</th><th>Tagline</th><th>Updated</th></tr></thead><tbody>';
+
+        result.data.forEach(vehicle => {
+          const date = new Date(vehicle.updated_at).toLocaleDateString();
+          const typeBadge = `<span class="badge badge-${vehicle.vehicle_type}">${vehicle.vehicle_type}</span>`;
+
+          html += `
+            <tr>
+              <td><strong>${vehicle.vehicle_name}</strong></td>
+              <td>${typeBadge}</td>
+              <td>${vehicle.price}</td>
+              <td>${vehicle.tagline || '—'}</td>
+              <td>${date}</td>
+            </tr>
+          `;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+      } catch (error) {
+        container.innerHTML = `<div class="error">Error loading inventory: ${error.message}</div>`;
+      }
+    }
+
+    async function syncInventory() {
+      const status = document.getElementById('syncStatus');
+      const btn = event.target;
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Syncing...';
+      status.innerHTML = '';
+
+      try {
+        const response = await fetch(`${API_BASE}/inventory/sync`, {
+          method: 'POST',
+          headers: getAdminHeaders(),
+          body: JSON.stringify({ password: ADMIN_PASSWORD }),
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          status.innerHTML = `<div class="success">${result.message}</div>`;
+          setTimeout(() => loadInventory(), 500);
+        } else {
+          status.innerHTML = `<div class="error">Error: ${result.error}</div>`;
+        }
+      } catch (error) {
+        status.innerHTML = `<div class="error">Error syncing inventory: ${error.message}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '↻ Sync from AT Price Chevrolet';
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('submissionModal').classList.remove('open');
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Load initial data
+    loadSubmissions();
+  </script>
+</body>
+</html>
