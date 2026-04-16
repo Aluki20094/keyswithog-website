@@ -1201,7 +1201,7 @@ async function generateReferralCode() {
 
   try {
     // POST to backend to generate referral code
-    const response = await fetch('http://localhost:5001/api/generate-referral', {
+    const response = await fetch('https://keys-with-og-backend.onrender.com/api/generate-referral', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1295,7 +1295,7 @@ async function handleSubmit() {
     const referralCode = localStorage.getItem('referral_code');
 
     // POST to backend
-    const response = await fetch('http://localhost:5001/api/submit-contact', {
+    const response = await fetch('https://keys-with-og-backend.onrender.com/api/submit-contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1502,7 +1502,7 @@ function verifyAdminPassword() {
   }
 
   // Send password to backend to verify
-  fetch('http://localhost:5001/admin/verify-password', {
+  fetch('https://keys-with-og-backend.onrender.com/admin/verify-password', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ password: password })
@@ -1512,7 +1512,7 @@ function verifyAdminPassword() {
     if (data.success) {
       // Store password in session and redirect to admin dashboard
       sessionStorage.setItem('adminPassword', password);
-      window.location.href = `http://localhost:5001/admin/dashboard?password=${encodeURIComponent(password)}`;
+      window.location.href = `https://keys-with-og-backend.onrender.com/admin/dashboard?password=${encodeURIComponent(password)}`;
     } else {
       errorEl.textContent = 'Incorrect password. Try again.';
       errorEl.style.display = 'block';
@@ -1599,7 +1599,7 @@ function filterInventory(cat, btn) {
 // ── Inventory loading from backend ──
 async function loadInventoryFromBackend() {
   try {
-    const response = await fetch('http://localhost:5001/api/inventory');
+    const response = await fetch('https://keys-with-og-backend.onrender.com/api/inventory');
     const result = await response.json();
 
     if (result.success && result.data && result.data.length > 0) {
