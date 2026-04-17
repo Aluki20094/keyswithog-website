@@ -36,12 +36,15 @@
       background: var(--dark);
       color: var(--text);
       line-height: 1.6;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
     }
 
     .container {
       max-width: 1400px;
       margin: 0 auto;
       padding: 2.5rem 1.5rem;
+      contain: layout style;
     }
 
     /* ── Header ── */
@@ -88,9 +91,11 @@
       font-weight: 500;
       color: var(--muted);
       border-bottom: 2px solid transparent;
-      transition: all 0.3s ease;
+      transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       letter-spacing: 0.02em;
       white-space: nowrap;
+      will-change: color, border-color;
+      backface-visibility: hidden;
     }
 
     .tab-btn:hover {
@@ -105,7 +110,7 @@
     /* ── Tab Content ── */
     .tab-content {
       display: none;
-      animation: fadeIn 0.4s ease;
+      animation: fadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
     .tab-content.active {
@@ -113,8 +118,8 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translate3d(0, 8px, 0); }
+      to { opacity: 1; transform: translate3d(0, 0, 0); }
     }
 
     /* ── Cards ── */
@@ -124,11 +129,15 @@
       border-radius: var(--radius);
       padding: 2rem;
       margin-bottom: 2rem;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.2s ease, transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: border-color, transform;
+      contain: layout style paint;
+      backface-visibility: hidden;
     }
 
     .card:hover {
       border-color: rgba(255,255,255,0.12);
+      transform: translate3d(0, -2px, 0);
     }
 
     .card h2 {
@@ -157,12 +166,15 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 1.75rem;
-      transition: all 0.3s ease;
+      transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: border-color, background, transform;
+      backface-visibility: hidden;
     }
 
     .stat-card:hover {
       border-color: var(--gold);
       background: rgba(201,168,76,0.03);
+      transform: translate3d(0, -2px, 0);
     }
 
     .stat-value {
@@ -171,6 +183,7 @@
       letter-spacing: 0.05em;
       color: var(--gold);
       margin-bottom: 0.5rem;
+      will-change: transform;
     }
 
     .stat-label {
@@ -184,6 +197,7 @@
     .table-wrapper {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
+      contain: layout style;
     }
 
     table {
@@ -209,6 +223,11 @@
       padding: 1.25rem;
       border-bottom: 1px solid rgba(255,255,255,0.04);
       font-size: 0.95rem;
+    }
+
+    tr {
+      transition: background 0.15s ease;
+      will-change: background;
     }
 
     tr:hover {
@@ -272,27 +291,31 @@
       font-size: 0.9rem;
       font-weight: 600;
       letter-spacing: 0.02em;
-      transition: all 0.3s ease;
+      transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       white-space: nowrap;
+      will-change: background, transform;
+      backface-visibility: hidden;
     }
 
     .action-btn:hover {
       background: var(--blue-dark);
-      transform: translateY(-2px);
+      transform: translate3d(0, -2px, 0);
     }
 
     .action-btn:active {
-      transform: translateY(0);
+      transform: translate3d(0, 0, 0);
     }
 
     .action-btn.secondary {
       background: rgba(255,255,255,0.08);
       border: 1px solid var(--border);
+      transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
     .action-btn.secondary:hover {
       background: rgba(255,255,255,0.12);
       border-color: var(--muted);
+      transform: translate3d(0, -2px, 0);
     }
 
     .action-btn.sync-btn {
@@ -329,7 +352,8 @@
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
       font-size: 0.95rem;
-      transition: all 0.3s ease;
+      transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: border-color, background;
     }
 
     input[type="text"]:focus,
@@ -339,6 +363,7 @@
       outline: none;
       border-color: var(--gold);
       background: rgba(255,255,255,0.06);
+      transform: translateZ(0); /* Force GPU layer */
     }
 
     input::placeholder,
@@ -617,9 +642,26 @@
   </div>
 
   <script>
+    // ── Performance & Caching ──
     const API_BASE = '/admin/api';
     const ADMIN_PASSWORD = new URLSearchParams(window.location.search).get('password') || '';
+    const cache = new Map();
+    const CACHE_DURATION = 2 * 60 * 1000; // 2 minutes
 
+    // Cache utilities
+    function getCachedData(key) {
+      const cached = cache.get(key);
+      if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+        return cached.data;
+      }
+      return null;
+    }
+
+    function setCachedData(key, data) {
+      cache.set(key, { data, timestamp: Date.now() });
+    }
+
+    // Optimized headers function
     function getAdminHeaders() {
       return {
         'Content-Type': 'application/json',
@@ -627,24 +669,53 @@
       };
     }
 
+    // Optimized tab switching with animation
     function switchTab(tab) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      // Early return if already active
+      const targetTab = document.getElementById(tab);
+      if (targetTab.classList.contains('active')) return;
 
-      document.getElementById(tab).classList.add('active');
-      event.target.classList.add('active');
+      // Batch DOM updates
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
 
+        targetTab.classList.add('active');
+        event.target.classList.add('active');
+      });
+
+      // Load data with caching
       if (tab === 'submissions') loadSubmissions();
       else if (tab === 'referrals') loadReferrals();
       else if (tab === 'inventory') loadInventory();
     }
 
+    // Optimized submissions loading with error handling and caching
     async function loadSubmissions() {
       const container = document.getElementById('submissionsContainer');
+      const cacheKey = 'submissions';
+
       try {
+        // Check cache first
+        const cached = getCachedData(cacheKey);
+        if (cached) {
+          renderSubmissions(cached, container);
+          return;
+        }
+
+        // Show optimized loading state
+        container.innerHTML = '<div class="loading" style="padding: 2rem; text-align: center; color: var(--muted);">📊 Loading submissions...</div>';
+
+        // Fetch with timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
         const response = await fetch(`${API_BASE}/submissions?limit=50`, {
           headers: getAdminHeaders(),
+          signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
         const result = await response.json();
 
         if (!result.success) {
@@ -652,35 +723,61 @@
           return;
         }
 
-        if (result.data.length === 0) {
-          container.innerHTML = '<div class="empty-state">No submissions yet</div>';
-          return;
-        }
+        // Cache successful response
+        setCachedData(cacheKey, result.data);
+        renderSubmissions(result.data, container);
 
-        let html = '<table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Interest</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody>';
-
-        result.data.forEach(sub => {
-          const date = new Date(sub.created_at).toLocaleDateString();
-          const emailStatus = sub.email_sent ? '<span class="badge badge-email-sent">Sent</span>' : '<span class="badge badge-pending">Pending</span>';
-
-          html += `
-            <tr>
-              <td><strong>${sub.first_name} ${sub.last_name}</strong></td>
-              <td>${sub.email}</td>
-              <td>${sub.phone}</td>
-              <td>${sub.interest || '—'}</td>
-              <td>${emailStatus}</td>
-              <td>${date}</td>
-              <td><button class="action-btn secondary" onclick="viewSubmission(${sub.id})">View</button></td>
-            </tr>
-          `;
-        });
-
-        html += '</tbody></table>';
-        container.innerHTML = html;
       } catch (error) {
-        container.innerHTML = `<div class="error">Error loading submissions: ${error.message}</div>`;
+        if (error.name === 'AbortError') {
+          container.innerHTML = '<div class="error">Request timed out. Please try again.</div>';
+        } else {
+          container.innerHTML = `<div class="error">Error loading submissions: ${error.message}</div>`;
+        }
       }
+    }
+
+    // Optimized rendering function
+    function renderSubmissions(data, container) {
+      if (data.length === 0) {
+        container.innerHTML = '<div class="empty-state">No submissions yet</div>';
+        return;
+      }
+
+      // Use DocumentFragment for better performance
+      const fragment = document.createDocumentFragment();
+
+      const table = document.createElement('table');
+      table.innerHTML = '<thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Interest</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>';
+
+      const tbody = document.createElement('tbody');
+
+      data.forEach(sub => {
+        const row = document.createElement('tr');
+        const date = new Date(sub.created_at).toLocaleDateString();
+        const emailStatus = sub.email_sent
+          ? '<span class="badge badge-email-sent">Sent</span>'
+          : '<span class="badge badge-pending">Pending</span>';
+
+        row.innerHTML = `
+          <td><strong>${sub.first_name} ${sub.last_name}</strong></td>
+          <td>${sub.email}</td>
+          <td>${sub.phone}</td>
+          <td>${sub.interest || '—'}</td>
+          <td>${emailStatus}</td>
+          <td>${date}</td>
+          <td><button class="action-btn secondary" onclick="viewSubmission(${sub.id})">View</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      table.appendChild(tbody);
+      fragment.appendChild(table);
+
+      // Single DOM update
+      requestAnimationFrame(() => {
+        container.innerHTML = '';
+        container.appendChild(fragment);
+      });
     }
 
     async function viewSubmission(id) {
@@ -767,18 +864,53 @@
 
     async function loadReferrals() {
       const container = document.getElementById('referralsContainer');
+      const cacheKey = 'referrals';
+
       try {
+        // Check cache first
+        const cached = getCachedData(cacheKey);
+        if (cached) {
+          renderReferrals(cached, container);
+          return;
+        }
+
+        container.innerHTML = '<div class="loading" style="padding: 2rem; text-align: center; color: var(--muted);">📊 Loading referrals...</div>';
+
+        // Fetch with timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
         const response = await fetch(`${API_BASE}/referrals`, {
           headers: getAdminHeaders(),
+          signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
         const result = await response.json();
 
+        // Update stats with safer parsing
         if (result.stats) {
-          document.getElementById('statTotalReferrers').textContent = result.stats.total_referrers || 0;
-          document.getElementById('statTotalReferrals').textContent = result.stats.total_referrals || 0;
-          document.getElementById('statTotalPayouts').textContent = '$' + (parseFloat(result.stats.total_payouts || 0).toFixed(2));
-          const avgReferrals = parseFloat(result.stats.avg_referrals_per_person || 0);
-          document.getElementById('statAvgReferrals').textContent = isNaN(avgReferrals) ? '0' : avgReferrals.toFixed(1);
+          const stats = result.stats;
+          const elements = {
+            totalReferrers: document.getElementById('statTotalReferrers'),
+            totalReferrals: document.getElementById('statTotalReferrals'),
+            totalPayouts: document.getElementById('statTotalPayouts'),
+            avgReferrals: document.getElementById('statAvgReferrals')
+          };
+
+          // Batch DOM updates
+          requestAnimationFrame(() => {
+            if (elements.totalReferrers) elements.totalReferrers.textContent = stats.total_referrers || 0;
+            if (elements.totalReferrals) elements.totalReferrals.textContent = stats.total_referrals || 0;
+            if (elements.totalPayouts) {
+              const payouts = parseFloat(stats.total_payouts || 0);
+              elements.totalPayouts.textContent = '$' + (isNaN(payouts) ? '0.00' : payouts.toFixed(2));
+            }
+            if (elements.avgReferrals) {
+              const avgReferrals = parseFloat(stats.avg_referrals_per_person || 0);
+              elements.avgReferrals.textContent = isNaN(avgReferrals) ? '0' : avgReferrals.toFixed(1);
+            }
+          });
         }
 
         if (!result.success) {
@@ -786,33 +918,55 @@
           return;
         }
 
-        if (result.data.length === 0) {
-          container.innerHTML = '<div class="empty-state">No referral codes generated yet</div>';
-          return;
-        }
+        // Cache and render
+        setCachedData(cacheKey, result.data);
+        renderReferrals(result.data, container);
 
-        let html = '<table><thead><tr><th>Name</th><th>Email</th><th>Code</th><th>Referrals</th><th>Payout</th><th>Created</th></tr></thead><tbody>';
-
-        result.data.forEach(ref => {
-          const date = new Date(ref.created_at).toLocaleDateString();
-
-          html += `
-            <tr>
-              <td><strong>${ref.name}</strong></td>
-              <td>${ref.email}</td>
-              <td><code style="background: rgba(255,255,255,0.05); padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.85rem;">${ref.referral_code}</code></td>
-              <td>${ref.referral_count}</td>
-              <td><strong style="color: var(--gold);">$${parseFloat(ref.payout_total).toFixed(2)}</strong></td>
-              <td>${date}</td>
-            </tr>
-          `;
-        });
-
-        html += '</tbody></table>';
-        container.innerHTML = html;
       } catch (error) {
-        container.innerHTML = `<div class="error">Error loading referrals: ${error.message}</div>`;
+        if (error.name === 'AbortError') {
+          container.innerHTML = '<div class="error">Request timed out. Please try again.</div>';
+        } else {
+          container.innerHTML = `<div class="error">Error loading referrals: ${error.message}</div>`;
+        }
       }
+    }
+
+    function renderReferrals(data, container) {
+      if (data.length === 0) {
+        container.innerHTML = '<div class="empty-state">No referral codes generated yet</div>';
+        return;
+      }
+
+      // Use DocumentFragment
+      const fragment = document.createDocumentFragment();
+      const table = document.createElement('table');
+      table.innerHTML = '<thead><tr><th>Name</th><th>Email</th><th>Code</th><th>Referrals</th><th>Payout</th><th>Created</th></tr></thead>';
+
+      const tbody = document.createElement('tbody');
+
+      data.forEach(ref => {
+        const row = document.createElement('tr');
+        const date = new Date(ref.created_at).toLocaleDateString();
+        const payout = parseFloat(ref.payout_total);
+
+        row.innerHTML = `
+          <td><strong>${ref.name}</strong></td>
+          <td>${ref.email}</td>
+          <td><code style="background: rgba(255,255,255,0.05); padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.85rem;">${ref.referral_code}</code></td>
+          <td>${ref.referral_count}</td>
+          <td><strong style="color: var(--gold);">$${isNaN(payout) ? '0.00' : payout.toFixed(2)}</strong></td>
+          <td>${date}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      table.appendChild(tbody);
+      fragment.appendChild(table);
+
+      requestAnimationFrame(() => {
+        container.innerHTML = '';
+        container.appendChild(fragment);
+      });
     }
 
     async function loadInventory() {
@@ -889,13 +1043,62 @@
       document.getElementById('submissionModal').classList.remove('open');
     }
 
-    // Close modal on escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeModal();
+    // ── Performance Initialization ──
+    document.addEventListener('DOMContentLoaded', function() {
+      // Optimize initial load
+      requestIdleCallback ? requestIdleCallback(loadSubmissions) : setTimeout(loadSubmissions, 100);
+
+      // Add keyboard shortcuts for productivity
+      document.addEventListener('keydown', function(e) {
+        if (e.altKey) {
+          switch(e.key) {
+            case '1':
+              e.preventDefault();
+              document.querySelector('[onclick="switchTab(\'submissions\')"]').click();
+              break;
+            case '2':
+              e.preventDefault();
+              document.querySelector('[onclick="switchTab(\'referrals\')"]').click();
+              break;
+            case '3':
+              e.preventDefault();
+              document.querySelector('[onclick="switchTab(\'inventory\')"]').click();
+              break;
+          }
+        }
+
+        // ESC to close modal
+        if (e.key === 'Escape') closeModal();
+      });
+
+      // Performance monitoring
+      if (performance.mark) {
+        performance.mark('admin-dashboard-ready');
+      }
+
+      // Auto-refresh data every 5 minutes when tab is visible
+      let refreshInterval;
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          clearInterval(refreshInterval);
+        } else {
+          refreshInterval = setInterval(() => {
+            // Clear cache and reload current tab
+            cache.clear();
+            const activeTab = document.querySelector('.tab-content.active');
+            if (activeTab) {
+              const tabId = activeTab.id;
+              if (tabId === 'submissions') loadSubmissions();
+              else if (tabId === 'referrals') loadReferrals();
+              else if (tabId === 'inventory') loadInventory();
+            }
+          }, 5 * 60 * 1000); // 5 minutes
+        }
+      });
     });
 
     // Load initial data
-    loadSubmissions();
+    // loadSubmissions(); // This is now handled in DOMContentLoaded
   </script>
 </body>
 </html>
