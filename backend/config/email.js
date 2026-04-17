@@ -105,7 +105,62 @@ async function sendOscarNotification(submissionData) {
   }
 }
 
+/**
+ * Send notification to referrer when someone uses their code
+ */
+async function sendReferrerNotification(referrerEmail, referrerName, referredName) {
+  const mailOptions = {
+    from: process.env.GMAIL_EMAIL,
+    to: referrerEmail,
+    subject: '🎉 Someone used your referral code!',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: #F0A500; color: #080808; padding: 30px; text-align: center; border-radius: 8px; margin-bottom: 30px;">
+          <h1 style="margin: 0; font-size: 32px; letter-spacing: 2px;">Keys with OG</h1>
+          <p style="margin: 10px 0 0 0; font-size: 14px;">Referral Bonus Program</p>
+        </div>
+
+        <h2 style="color: #080808; font-size: 24px; margin-bottom: 15px;">Hey ${referrerName}, great news!</h2>
+
+        <p style="color: #575350; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+          <strong>${referredName}</strong> just submitted your referral code to Oscar. That means your referral is now being tracked.
+        </p>
+
+        <div style="background: #F2F2F2; padding: 20px; border-left: 4px solid #F0A500; margin-bottom: 30px; border-radius: 4px;">
+          <p style="color: #080808; margin: 0; font-weight: bold; margin-bottom: 10px;">What happens next?</p>
+          <ul style="color: #575350; margin: 0; padding-left: 20px;">
+            <li style="margin-bottom: 8px;">Oscar will work with ${referredName} on finding the right vehicle</li>
+            <li style="margin-bottom: 8px;">When they purchase, you'll earn your <strong>$100 cash bonus</strong></li>
+            <li>Oscar will reach out to you directly when it's time to collect</li>
+          </ul>
+        </div>
+
+        <p style="color: #575350; font-size: 14px; margin-bottom: 30px;">
+          Thanks for spreading the word! Keep referring friends — there's no limit. 💰
+        </p>
+
+        <div style="border-top: 1px solid #E8E8E8; padding-top: 20px; text-align: center;">
+          <p style="color: #888480; font-size: 12px; margin: 0;">
+            © 2025 Keys with OG • AT Price Chevrolet, Pleasanton, TX<br>
+            2035 W Oaklawn Rd, Pleasanton, TX 78064
+          </p>
+        </div>
+      </div>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ Referrer notification sent to ${referrerEmail}`);
+    return true;
+  } catch (error) {
+    console.error(`❌ Failed to send referrer notification to ${referrerEmail}:`, error.message);
+    return false;
+  }
+}
+
 module.exports = {
   sendCustomerConfirmation,
   sendOscarNotification,
+  sendReferrerNotification,
 };

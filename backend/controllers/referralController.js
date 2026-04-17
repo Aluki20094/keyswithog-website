@@ -263,6 +263,15 @@ class ReferralController {
 
       let payoutAmount = null;
       if (typeof payout_amount !== 'undefined') {
+        if (
+          payout_amount === null ||
+          (typeof payout_amount === 'string' && payout_amount.trim() === '')
+        ) {
+          return res.status(400).json({
+            success: false,
+            error: 'Payout amount cannot be empty',
+          });
+        }
         payoutAmount = parseFloat(payout_amount);
         if (Number.isNaN(payoutAmount)) {
           return res.status(400).json({

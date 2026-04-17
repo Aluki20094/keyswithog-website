@@ -1292,7 +1292,43 @@
         payoutInput.step = '0.01';
         payoutInput.className = 'payout-input';
         payoutInput.value = parseFloat(sub.payout_amount || 0).toFixed(2);
-        payoutInput.addEventListener('blur', () => updateReferralSubmissionPayout(sub.id, referralCode, payoutInput.value));
+        payoutInput.addEventListener('blur', () => {
+          const payoutValue = Number.parseFloat(payoutInput.value);
+
+          if (!Number.isFinite(payoutValue) || payoutValue < 0) {
+            payoutInput.value = parseFloat(sub.payout_amount || 0).toFixed(2);
+        const initialNotesValue = sub.notes || '';
+        notesInput.className = 'notes-input';
+        notesInput.placeholder = 'Add payout notes...';
+        notesInput.value = initialNotesValue;
+
+        const saveNotesBtn = document.createElement('button');
+        saveNotesBtn.type = 'button';
+        saveNotesBtn.className = 'validate-btn is-pending';
+        saveNotesBtn.textContent = 'Save';
+        saveNotesBtn.disabled = true;
+        saveNotesBtn.style.marginTop = '8px';
+
+        let lastSavedNotesValue = initialNotesValue;
+        const syncSaveNotesState = () => {
+          saveNotesBtn.disabled = notesInput.value === lastSavedNotesValue;
+        };
+
+        notesInput.addEventListener('input', syncSaveNotesState);
+        saveNotesBtn.addEventListener('click', async () => {
+          if (notesInput.value === lastSavedNotesValue) {
+            return;
+          }
+
+          saveNotesBtn.disabled = true;
+          await updateReferralSubmissionNotes(sub.id, referralCode, notesInput.value);
+          lastSavedNotesValue = notesInput.value;
+          syncSaveNotesState();
+        });
+
+        notesCell.appendChild(notesInput);
+        notesCell.appendChild(saveNotesBtn);
+        });
         payoutCell.appendChild(payoutInput);
 
         const notesCell = document.createElement('td');
@@ -1356,7 +1392,16 @@
         referralSubmissionsCache.delete(referralCode);
         await loadReferralSubmissions(referralCode, true);
         refreshReferralStats();
-      } catch (error) {
+      const normalizedPayoutAmount =
+        typeof payoutAmount === 'string' ? payoutAmount.trim() : payoutAmount;
+      const parsedPayoutAmount = Number(normalizedPayoutAmount);
+
+      if (!Number.isFinite(parsedPayoutAmount)) {
+        alert('Please enter a valid payout amount.');
+        return;
+      }
+
+      await updateReferralSubmissionDetails(id, referralCode, { payout_amount: parsedPayoutAmount });
         alert('Error updating referral submission: ' + error.message);
       }
     }

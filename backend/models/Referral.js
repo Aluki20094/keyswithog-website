@@ -185,16 +185,40 @@ class Referral {
    * Update referral submission notes or payout amount
    */
   static async updateSubmissionNotes(id, notes, payoutAmount) {
-    const query = `
-      UPDATE referral_submissions
-      SET notes = COALESCE($2, notes),
-          payout_amount = COALESCE($3, payout_amount)
-      WHERE id = $1
-      RETURNING *;
-    `;
+    const updates = [];
+    const values = [id];
+
+    if (notes !== undefined) {
+      values.push(notes);
+      updates.push(`notes = $${values.length}`);
+    }
+
+    if (payoutAmount !== undefined) {
+      values.push(payoutAmount);
+      updates.push(`payout_amount = $${values.length}`);
+    }
 
     try {
-      const result = await db.query(query, [id, notes, payoutAmount]);
+      if (updates.length === 0) {
+        const result = await db.query(
+          `
+            SELECT *
+            FROM referral_submissions
+            WHERE id = $1;
+          `,
+          [id]
+        );
+        return result.rows[0];
+      }
+
+      const query = `
+        UPDATE referral_submissions
+        SET ${updates.join(', ')}
+        WHERE id = $1
+        RETURNING *;
+      `;
+
+      const result = await db.query(query, values);
       return result.rows[0];
     } catch (error) {
       console.error('Error updating referral submission notes:', error.message);
@@ -203,7 +227,7 @@ class Referral {
   }
 
   /**
-   * Get count of all referrals
+        (SELECT COUNT(*) FROM referral_submissions WHERE validated = FALSE) as pending_submissions_count
    */
   static async getCount() {
     const query = 'SELECT COUNT(*) FROM referrals;';

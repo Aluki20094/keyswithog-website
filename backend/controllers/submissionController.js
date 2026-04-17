@@ -1,6 +1,6 @@
 const Submission = require('../models/Submission');
 const Referral = require('../models/Referral');
-const { sendCustomerConfirmation, sendOscarNotification } = require('../config/email');
+const { sendCustomerConfirmation, sendOscarNotification, sendReferrerNotification } = require('../config/email');
 
 class SubmissionController {
   /**
@@ -30,10 +30,15 @@ class SubmissionController {
         referral_code,
       });
 
-      // If referral code was used, track it
+      // If referral code was used, track it and notify the referrer
       if (referral_code) {
         try {
           await Referral.addReferredSubmission(referral_code, email);
+          // Look up referrer and send notification if they have a real email
+          const referrer = await Referral.getByCode(referral_code);
+          if (referrer && referrer.email && !referrer.email.endsWith('@referral.keysog')) {
+            await sendReferrerNotification(referrer.email, referrer.first_name, first_name);
+          }
         } catch (refError) {
           console.warn('Warning: Could not track referral:', refError.message);
         }

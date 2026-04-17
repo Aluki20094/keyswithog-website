@@ -115,10 +115,7 @@
   nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2.5rem; background: rgba(8,8,8,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(26,82,212,0.2); will-change: transform; contain: layout style paint; }
   .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.08em; color: var(--text); }
   .nav-logo span { color: var(--blue); }
-  .nav-links { display: flex; gap: 2rem; align-items: center; }
-  .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.88rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 500; transition: color 0.15s ease; will-change: color; }
-  .nav-links a:hover { color: var(--blue); }
-  .nav-cta { background: var(--blue) !important; color: var(--dark) !important; padding: 0.5rem 1.4rem; border-radius: var(--radius); font-weight: 600 !important; letter-spacing: 0.04em !important; transition: background 0.15s ease, transform 0.15s ease !important; will-change: background, transform; }
+  .nav-cta { background: var(--blue) !important; color: var(--dark) !important; padding: 0.5rem 1.4rem; border-radius: var(--radius); font-weight: 600 !important; letter-spacing: 0.04em !important; transition: background 0.15s ease, transform 0.15s ease !important; will-change: background, transform; text-decoration: none; font-size: 0.88rem; }
   .nav-cta:hover { background: var(--blue-dark) !important; transform: translateY(-1px); }
   .hero { min-height: 100vh; display: flex; align-items: center; padding: 7rem 2.5rem 4rem; position: relative; overflow: hidden; background: var(--dark); }
   .hero-bg { position: absolute; inset: 0; z-index: 0; background-image: url('images/oscar-hero.jpg'); background-size: cover; background-position: center 20%; }
@@ -436,24 +433,33 @@
   /* ── Section Accordion ── */
   .acc-tab { display: none; }
 
-  /* ── Mobile Menu ── */
-  .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 200; margin-left: 0.5rem; }
-  .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: transform 0.25s, opacity 0.2s; }
-  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-  .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-  .mobile-menu { position: fixed; inset: 0; z-index: 150; background: rgba(0,0,0,0.55); opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s; }
-  .mobile-menu.open { opacity: 1; visibility: visible; }
-  .mobile-menu-panel { position: absolute; top: 0; right: 0; width: 72%; max-width: 300px; height: 100%; background: var(--dark2); border-left: 1px solid rgba(255,255,255,0.07); padding: 5rem 1.75rem 2rem; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.32s cubic-bezier(0.22,1,0.36,1); }
-  .mobile-menu.open .mobile-menu-panel { transform: translateX(0); }
-  .mobile-menu-panel a { display: block; color: var(--text); text-decoration: none; padding: 1rem 0; font-size: 1.05rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.06); letter-spacing: 0.02em; transition: color 0.2s; }
-  html.light-mode .mobile-menu-panel a { border-bottom-color: rgba(0,0,0,0.08); }
-  .mobile-menu-panel a:hover { color: var(--gold); }
-  .mobile-menu-cta { margin-top: 1.75rem; background: var(--blue); color: var(--dark) !important; padding: 0.9rem 1.5rem !important; border-radius: var(--radius); font-weight: 700 !important; text-align: center; border-bottom: none !important; }
-  html.light-mode .mobile-menu-panel { background: var(--dark2); }
+  /* ── Menu Trigger (Car Icon) ── */
+  .menu-trigger { position: relative; background: none; border: none; cursor: pointer; padding: 4px; z-index: 200; color: var(--text); transition: color 0.25s; display: flex; align-items: center; justify-content: center; }
+  .menu-trigger .car-icon { transition: opacity 0.25s, color 0.25s; }
+  .menu-trigger .menu-x { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; opacity: 0; transition: opacity 0.25s; pointer-events: none; }
+  .menu-trigger.open .car-icon { opacity: 0; }
+  .menu-trigger.open .menu-x { opacity: 1; }
+  .menu-trigger.open { color: var(--blue); }
+
+  /* ── Slide-in Panel ── */
+  .menu-overlay { position: fixed; inset: 0; z-index: 150; background: rgba(0,0,0,0.55); opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s; }
+  .menu-overlay.open { opacity: 1; visibility: visible; }
+  .menu-panel { position: absolute; top: 0; right: 0; width: 72%; max-width: 300px; height: 100%; background: var(--dark2); border-left: 1px solid rgba(255,255,255,0.07); padding: 5rem 1.75rem 2rem; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.32s cubic-bezier(0.22,1,0.36,1); }
+  .menu-overlay.open .menu-panel { transform: translateX(0); }
+  .menu-panel a { display: block; color: var(--text); text-decoration: none; padding: 1rem 0; font-size: 1.05rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.06); letter-spacing: 0.02em; transition: color 0.2s; }
+  html.light-mode .menu-panel a { border-bottom-color: rgba(0,0,0,0.08); }
+  .menu-panel a:hover { color: var(--gold); }
+  .menu-panel-cta { margin-top: 1.75rem; background: var(--blue); color: var(--dark) !important; padding: 0.9rem 1.5rem !important; border-radius: var(--radius); font-weight: 700 !important; text-align: center; border-bottom: none !important; }
+  .menu-panel-btn { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); color: var(--text); padding: 0.7rem 1rem; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; width: 100%; justify-content: center; transition: background 0.2s; }
+  .menu-panel-btn:hover { background: rgba(255,255,255,0.14); }
+  .menu-panel-btn--muted { margin-top: 0.5rem; background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
+  .menu-panel-btn--muted:hover { color: var(--text); }
+  html.light-mode .menu-panel { background: var(--dark2); }
+  html.light-mode .menu-panel-btn { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); }
+  html.light-mode .menu-panel-btn--muted { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.07); color: rgba(0,0,0,0.5); }
 
   @media (max-width: 768px) {
-    nav { padding: 1rem 1.25rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } .theme-toggle, .admin-toggle { display: none !important; } section { padding: 3rem 1.25rem; }
+    nav { padding: 1rem 1.25rem; } section { padding: 3rem 1.25rem; }
     .hero { padding: 5rem 1.25rem 2.5rem; min-height: 90vh; }
     .hero-bg { background-position: 58% center; }
     .hero h1 { font-size: clamp(2.8rem, 11vw, 4rem); margin-bottom: 1rem; }
@@ -494,8 +500,7 @@
     --text: #0A0A0A; --muted: #575350;
     --blue: #1A52D4; --blue-dark: #1240A8;
   }
-  html.light-mode nav { background: rgba(242,242,242,0.96) !important; border-bottom-color: rgba(26,82,212,0.18) !important; }
-  html.light-mode .nav-links a { color: var(--muted); }
+  html.light-mode nav { background: rgba(252,252,252,0.97) !important; border-bottom: 1px solid rgba(0,0,0,0.08) !important; }
   html.light-mode .hero-bg::after { background: linear-gradient(90deg, rgba(242,242,242,0.93) 0%, rgba(242,242,242,0.78) 55%, rgba(242,242,242,0.35) 100%); }
   html.light-mode .hero h1 { color: var(--text); }
   html.light-mode .hero p { color: var(--muted); }
@@ -509,19 +514,6 @@
   html.light-mode .popup-box { background: #fff; border-color: rgba(26,82,212,0.25); }
   html.light-mode .popup-close { background: rgba(0,0,0,0.07); }
   html.light-mode footer { background: #D8D8D8; }
-
-  /* ── Theme Toggle ── */
-  .theme-toggle, .admin-toggle {
-    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
-    color: var(--text); width: 36px; height: 36px; border-radius: 50%;
-    cursor: pointer; font-size: 1.1rem; display: flex; align-items: center;
-    justify-content: center; transition: background 0.15s ease, transform 0.15s ease; margin-left: 0.25rem; flex-shrink: 0;
-    will-change: background, transform; backface-visibility: hidden;
-  }
-  .theme-toggle:hover, .admin-toggle:hover { background: rgba(255,255,255,0.14); transform: scale(1.05); }
-  .admin-toggle { opacity: 0.6; }
-  .admin-toggle:hover { opacity: 1; }
-  html.light-mode .theme-toggle, html.light-mode .admin-toggle { background: rgba(0,0,0,0.07); border-color: rgba(0,0,0,0.12); }
 
   /* ── Floating CTA ── */
   .float-cta {
@@ -694,36 +686,29 @@
 
 <nav>
   <div class="nav-logo">Keys<span>withOG</span></div>
-  <div class="nav-links">
-    <a href="#services">What I Offer</a>
-    <a href="#about">Why Oscar</a>
-    <a href="#programs">Programs</a>
-    <a href="#referral">💵 Referral</a>
-    <a href="#inventory">Inventory</a>
-    <a href="#social">Reels</a>
+  <div style="display:flex; align-items:center; gap:0.75rem;">
     <a href="#contact" class="nav-cta">Get in Touch</a>
+    <button class="menu-trigger" id="menuTrigger" onclick="toggleMenu()" aria-label="Open menu">
+      <svg class="car-icon" viewBox="0 0 40 24" width="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 14.5h36M5 14.5l3-7h10l6 7M4 14.5c0 0-2 0-2 2.5s2 2.5 2 2.5h2c0 0 1.5 0 2.5-2.5M28 14.5h8c0 0 2 0 2 2.5s-2 2.5-2 2.5h-2c0 0-1.5 0-2.5-2.5"/><circle cx="10" cy="19" r="3"/><circle cx="30" cy="19" r="3"/></svg>
+      <span class="menu-x">✕</span>
+    </button>
   </div>
-  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" title="Toggle theme">☀</button>
-  <button class="admin-toggle" onclick="openAdminLogin()" aria-label="Admin access" title="Admin Dashboard">⚙</button>
-  <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Open menu">
-    <span></span><span></span><span></span>
-  </button>
 </nav>
 
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu" onclick="handleMenuOverlay(event)">
-  <div class="mobile-menu-panel">
+<!-- Menu Panel -->
+<div class="menu-overlay" id="mobileMenu" onclick="handleMenuOverlay(event)">
+  <div class="menu-panel">
     <a href="#services" onclick="closeMenu()">What I Offer</a>
     <a href="#about" onclick="closeMenu()">Why Oscar</a>
     <a href="#programs" onclick="closeMenu()">Programs</a>
     <a href="#referral" onclick="closeMenu()">💵 Referral</a>
     <a href="#inventory" onclick="closeMenu()">Inventory</a>
     <a href="#social" onclick="closeMenu()">Reels</a>
-    <a href="#contact" class="mobile-menu-cta" onclick="closeMenu()">Get in Touch →</a>
-    <button class="mobile-theme-toggle" onclick="toggleTheme()" style="margin-top:1.5rem; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); color:var(--text); padding:0.7rem 1rem; border-radius:var(--radius); font-family:'DM Sans',sans-serif; font-size:0.88rem; cursor:pointer; display:flex; align-items:center; gap:0.5rem; width:100%; justify-content:center;">
+    <a href="#contact" class="menu-panel-cta" onclick="closeMenu()">Get in Touch →</a>
+    <button class="menu-panel-btn" onclick="toggleTheme()" style="margin-top:1.5rem;">
       <span id="mobileThemeIcon">☀</span> Toggle Light / Dark
     </button>
-    <button class="mobile-admin-toggle" onclick="closeMenu(); openAdminLogin();" style="margin-top:0.5rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.6); padding:0.7rem 1rem; border-radius:var(--radius); font-family:'DM Sans',sans-serif; font-size:0.88rem; cursor:pointer; display:flex; align-items:center; gap:0.5rem; width:100%; justify-content:center;">
+    <button class="menu-panel-btn menu-panel-btn--muted" onclick="closeMenu(); openAdminLogin();">
       ⚙ Admin Dashboard
     </button>
   </div>
@@ -735,8 +720,8 @@
     <h1>Get Your Keys<em>with OG.</em></h1>
     <p>New &amp; used cars at the price you deserve — with a salesman who actually works for you. No pressure. No games. Just keys in your hand.</p>
     <div class="hero-actions">
-      <a href="#" class="btn-outline" onclick="openReturningPath(); return false;">I've bought from Oscar before</a>
-      <a href="#" class="btn-primary btn-spotlight" onclick="openNewVisitorPath(); return false;">First time — show me why Oscar →</a>
+      <button type="button" class="btn-outline" onclick="openReturningPath()">I've bought from Oscar before</button>
+      <button type="button" class="btn-primary btn-spotlight" onclick="openNewVisitorPath()">First time — show me why Oscar →</button>
     </div>
     <div class="hero-stats">
       <div><div class="stat-num">2,000+</div><div class="stat-label">Cars Sold</div></div>
@@ -878,6 +863,10 @@
             <input type="text" id="refLastName" class="ref-input" placeholder="Anzures" autocomplete="family-name" />
           </div>
         </div>
+        <div class="ref-input-group" style="margin-top:0.5rem; margin-bottom:0.5rem;">
+          <label for="refEmail">Email (so Oscar can reach you about your payout)</label>
+          <input type="email" id="refEmail" class="ref-input" placeholder="you@email.com" autocomplete="email" />
+        </div>
         <div class="ref-error" id="refError"></div>
         <button class="btn-primary referral-generate-btn" onclick="generateReferralCode()">Generate My Referral Code →</button>
       </div>
@@ -891,6 +880,39 @@
         </div>
         <p class="referral-note">Saved to this browser. Give this code to anyone interested in buying — Oscar will take care of the rest.</p>
         <button class="ref-reset-btn" onclick="resetReferralCode()">← Use a different name</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Redeem a Referral Code -->
+  <div style="max-width:520px; margin:3rem auto 0; text-align:center;">
+    <h3 style="font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:0.04em; margin-bottom:0.5rem;">Were You Referred?</h3>
+    <p style="color:var(--muted); font-size:0.93rem; margin-bottom:1.5rem;">If a friend gave you a referral code, enter it below so Oscar can track your connection and make sure they get their $100.</p>
+
+    <div class="referral-card" id="redeemCard">
+      <div id="redeemInputState">
+        <div class="ref-form-row">
+          <div class="ref-input-group">
+            <label for="redeemCode">Referral Code</label>
+            <input type="text" id="redeemCode" class="ref-input" placeholder="JUAN_GON_1234" style="text-transform:uppercase;" />
+          </div>
+          <div class="ref-input-group">
+            <label for="redeemName">Your Name</label>
+            <input type="text" id="redeemName" class="ref-input" placeholder="Your full name" />
+          </div>
+        </div>
+        <div class="ref-input-group" style="margin-top:0.5rem; margin-bottom:0.5rem;">
+          <label for="redeemPhone">Your Phone</label>
+          <input type="tel" id="redeemPhone" class="ref-input" placeholder="(210) 555-0100" />
+        </div>
+        <div class="ref-error" id="redeemError"></div>
+        <button class="btn-primary referral-generate-btn" onclick="redeemReferralCode()">Submit Referral Code →</button>
+      </div>
+      <div id="redeemSuccessState" style="display:none; text-align:center; padding:1rem 0;">
+        <div style="font-size:2rem; margin-bottom:0.75rem;">✅</div>
+        <h3 style="font-family:'Bebas Neue',sans-serif; font-size:1.4rem; margin-bottom:0.5rem;">Code <em style="color:var(--gold);" id="redeemCodeConfirm"></em> Accepted!</h3>
+        <p style="color:var(--muted); font-size:0.9rem;">Oscar knows you were referred. Fill out the contact form below and he'll reach out shortly.</p>
+        <a href="#contact" class="btn-primary" style="margin-top:1rem; display:inline-flex; text-decoration:none;" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'}); return false;">Get in Touch with Oscar →</a>
       </div>
     </div>
   </div>
@@ -1240,6 +1262,7 @@ function setCachedData(key, data) {
 async function generateReferralCode() {
   const fn = document.getElementById('refFirstName').value.trim();
   const ln = document.getElementById('refLastName').value.trim();
+  const email = document.getElementById('refEmail').value.trim();
   const errEl = document.getElementById('refError');
 
   // Clear previous errors
@@ -1262,6 +1285,18 @@ async function generateReferralCode() {
     return;
   }
 
+  if (!email) {
+    errEl.textContent = 'Please enter your email so Oscar can reach you about payouts.';
+    document.getElementById('refEmail').focus();
+    return;
+  }
+
+  if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    errEl.textContent = 'Please enter a valid email address.';
+    document.getElementById('refEmail').focus();
+    return;
+  }
+
   // Show loading state
   const btn = document.querySelector('.referral-generate-btn');
   const originalText = btn.textContent;
@@ -1281,7 +1316,7 @@ async function generateReferralCode() {
       body: JSON.stringify({
         first_name: fn,
         last_name: ln,
-        email: fn.toLowerCase() + '.' + ln.toLowerCase() + '@referral.keysog',
+        email: email,
       }),
       signal: controller.signal
     });
@@ -1292,6 +1327,7 @@ async function generateReferralCode() {
     if (result.success) {
       const code = result.data.referral_code;
       _refSystem.saveCode(code);
+      localStorage.setItem('referral_email', email);
 
       // Smooth transition to code display
       _showCodeWithAnimation(code);
@@ -1380,11 +1416,74 @@ function resetReferralCode() {
   var codeEl  = document.getElementById('refCodeState');
   var fn      = document.getElementById('refFirstName');
   var ln      = document.getElementById('refLastName');
+  var em      = document.getElementById('refEmail');
   if (codeEl)  codeEl.style.display  = 'none';
   if (inputEl) inputEl.style.display = 'block';
   if (fn) { fn.value = ''; fn.focus(); }
   if (ln)   ln.value = '';
+  if (em)   em.value = '';
 }
+
+async function redeemReferralCode() {
+  const code = document.getElementById('redeemCode').value.trim().toUpperCase();
+  const name = document.getElementById('redeemName').value.trim();
+  const phone = document.getElementById('redeemPhone').value.trim();
+  const errEl = document.getElementById('redeemError');
+  errEl.textContent = '';
+
+  if (!code) { errEl.textContent = 'Please enter the referral code your friend gave you.'; return; }
+  if (!name || name.length < 2) { errEl.textContent = 'Please enter your name.'; return; }
+  if (!phone || phone.replace(/\D/g, '').length < 10) { errEl.textContent = 'Please enter a valid phone number (at least 10 digits).'; return; }
+
+  const btn = document.querySelector('#redeemCard .referral-generate-btn');
+  const originalText = btn.textContent;
+  btn.disabled = true; btn.style.opacity = '0.7'; btn.textContent = '⏳ Checking...';
+
+  try {
+    const checkResp = await fetch('https://hotpink-shrew-647765.hostingersite.com/api/referral/' + encodeURIComponent(code));
+    const checkResult = await checkResp.json();
+
+    if (!checkResult.success) {
+      errEl.textContent = 'Referral code not found. Double-check the spelling and try again.';
+      return;
+    }
+
+    // Store code for contact form auto-fill
+    localStorage.setItem('referral_code', code);
+    localStorage.setItem('referral_redeemed', 'true');
+
+    // Show success state
+    document.getElementById('redeemInputState').style.display = 'none';
+    document.getElementById('redeemSuccessState').style.display = 'block';
+    document.getElementById('redeemCodeConfirm').textContent = code;
+
+    // Show badge on contact form
+    _showReferralBadge(code);
+  } catch (error) {
+    errEl.textContent = 'Connection error. Please try again.';
+  } finally {
+    btn.disabled = false; btn.style.opacity = ''; btn.textContent = originalText;
+  }
+}
+
+function _showReferralBadge(code) {
+  var note = document.getElementById('referralSubmitNote');
+  if (note) {
+    note.textContent = '🎟️ Referral code ' + code + ' applied! Oscar will credit your referrer.';
+    note.style.display = 'block';
+  }
+}
+
+// Restore referral badge on page load if previously redeemed
+(function() {
+  var savedCode = localStorage.getItem('referral_code');
+  var redeemed = localStorage.getItem('referral_redeemed');
+  if (savedCode && redeemed) {
+    document.addEventListener('DOMContentLoaded', function() {
+      _showReferralBadge(savedCode);
+    });
+  }
+})();
 
 function _fallbackCopy(text) {
   var ta = document.createElement('textarea');
@@ -1544,8 +1643,18 @@ async function handleSubmit() {
   }
 }
 
+function isValidContactUrl(value) {
+  try {
+    const parsedUrl = new URL(value);
+    return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+  } catch (error) {
+    return false;
+  }
+}
+
 function contactAboutCar() {
-  const url = document.getElementById('car-url-input').value.trim();
+  const rawUrl = document.getElementById('car-url-input').value.trim();
+  const url = isValidContactUrl(rawUrl) ? rawUrl : '';
   const message = url
     ? `I'm interested in this specific vehicle: ${url}`
     : 'I saw a vehicle on your inventory page';
@@ -1687,17 +1796,17 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// ── Hamburger Menu ──
+// ── Menu Panel ──
 function toggleMenu() {
   const menu = document.getElementById('mobileMenu');
-  const btn = document.getElementById('hamburger');
+  const btn = document.getElementById('menuTrigger');
   const isOpen = menu.classList.toggle('open');
   btn.classList.toggle('open');
   document.body.style.overflow = isOpen ? 'hidden' : '';
 }
 function closeMenu() {
   document.getElementById('mobileMenu').classList.remove('open');
-  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('menuTrigger').classList.remove('open');
   document.body.style.overflow = '';
 }
 function handleMenuOverlay(e) {
@@ -1709,18 +1818,14 @@ function toggleTheme() {
   const isLight = document.documentElement.classList.toggle('light-mode');
   localStorage.setItem('theme', isLight ? 'light' : 'dark');
   const icon = isLight ? '🌙' : '☀';
-  const desktopBtn = document.querySelector('.theme-toggle');
   const mobileIcon = document.getElementById('mobileThemeIcon');
-  if (desktopBtn) desktopBtn.textContent = icon;
   if (mobileIcon) mobileIcon.textContent = icon;
 }
 (function() {
   if (localStorage.getItem('theme') === 'light') {
     document.documentElement.classList.add('light-mode');
     document.addEventListener('DOMContentLoaded', function() {
-      const desktopBtn = document.querySelector('.theme-toggle');
       const mobileIcon = document.getElementById('mobileThemeIcon');
-      if (desktopBtn) desktopBtn.textContent = '🌙';
       if (mobileIcon) mobileIcon.textContent = '🌙';
     });
   }
