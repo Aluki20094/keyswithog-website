@@ -67,8 +67,14 @@ class Referral {
    */
   static async getAll(limit = 50, offset = 0) {
     const query = `
-      SELECT * FROM referrals
-      ORDER BY referral_count DESC, created_at DESC
+      SELECT
+        r.*,
+        COALESCE(COUNT(rs.id), 0) AS submission_count,
+        COALESCE(SUM(CASE WHEN rs.validated THEN 1 ELSE 0 END), 0) AS validated_count
+      FROM referrals r
+      LEFT JOIN referral_submissions rs ON r.referral_code = rs.referral_code
+      GROUP BY r.id
+      ORDER BY r.referral_count DESC, r.created_at DESC
       LIMIT $1 OFFSET $2;
     `;
 
@@ -109,9 +115,89 @@ class Referral {
       `;
 
       const result = await db.query(query, [updatedEmails, newCount, newPayout, referralCode]);
+
+      await db.query(
+        `
+          INSERT INTO referral_submissions (referral_code, referred_email)
+          VALUES ($1, $2)
+          ON CONFLICT (referral_code, referred_email) DO NOTHING;
+        `,
+        [referralCode, referredEmail]
+      );
+
       return result.rows[0];
     } catch (error) {
       console.error('Error adding referred submission:', error.message);
+      throw error;
+    }
+  }
+
+  /**
+   * Get referral submissions by code
+   */
+  static async getSubmissionsByCode(referralCode) {
+    const query = `
+      SELECT
+        id,
+        referral_code,
+        referred_email,
+        submitted_at,
+        validated,
+        validated_at,
+        payout_amount,
+        notes
+      FROM referral_submissions
+      WHERE referral_code = $1
+      ORDER BY submitted_at DESC;
+    `;
+
+    try {
+      const result = await db.query(query, [referralCode]);
+      return result.rows;
+    } catch (error) {
+      console.error('Error fetching referral submissions:', error.message);
+      throw error;
+    }
+  }
+
+  /**
+   * Set referral submission validation status
+   */
+  static async setSubmissionValidated(id, validated) {
+    const query = `
+      UPDATE referral_submissions
+      SET validated = $2,
+          validated_at = CASE WHEN $2 THEN NOW() ELSE NULL END
+      WHERE id = $1
+      RETURNING *;
+    `;
+
+    try {
+      const result = await db.query(query, [id, validated]);
+      return result.rows[0];
+    } catch (error) {
+      console.error('Error updating referral submission validation:', error.message);
+      throw error;
+    }
+  }
+
+  /**
+   * Update referral submission notes or payout amount
+   */
+  static async updateSubmissionNotes(id, notes, payoutAmount) {
+    const query = `
+      UPDATE referral_submissions
+      SET notes = COALESCE($2, notes),
+          payout_amount = COALESCE($3, payout_amount)
+      WHERE id = $1
+      RETURNING *;
+    `;
+
+    try {
+      const result = await db.query(query, [id, notes, payoutAmount]);
+      return result.rows[0];
+    } catch (error) {
+      console.error('Error updating referral submission notes:', error.message);
       throw error;
     }
   }
@@ -140,7 +226,8 @@ class Referral {
         COUNT(*) as total_referrers,
         SUM(referral_count) as total_referrals,
         SUM(payout_total) as total_payouts,
-        AVG(referral_count) as avg_referrals_per_person
+        AVG(referral_count) as avg_referrals_per_person,
+        (SELECT COUNT(*) FROM referral_submissions WHERE validated = FALSE) as pending_payouts
       FROM referrals;
     `;
 

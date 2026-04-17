@@ -86,7 +86,6 @@ Ensure your `.env` file contains:
 DATABASE_URL=postgresql://username:password@your-neon-db-url/dbname?sslmode=require
 GMAIL_EMAIL=your-email@gmail.com
 GMAIL_PASSWORD=your-app-password
-CLAUDE_API_KEY=your-claude-api-key-here
 ADMIN_PASSWORD=your-secure-admin-password
 NODE_ENV=production
 PORT=3000

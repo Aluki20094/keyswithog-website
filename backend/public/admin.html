@@ -279,6 +279,108 @@
       color: rgba(255,255,255,0.7);
     }
 
+    /* ── Referral Submissions ── */
+    .referral-toggle {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.85rem;
+    }
+
+    .referral-toggle:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .referral-summary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .referral-summary strong {
+      color: var(--text);
+    }
+
+    .referral-submissions-row td {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .referral-submissions {
+      padding: 1rem;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+    }
+
+    .submissions-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .submissions-table th,
+    .submissions-table td {
+      padding: 0.65rem;
+      font-size: 0.82rem;
+    }
+
+    .submission-row.validated {
+      background: rgba(74, 160, 80, 0.12);
+    }
+
+    .submission-row.pending {
+      background: rgba(240, 165, 0, 0.12);
+    }
+
+    .payout-input {
+      width: 120px;
+    }
+
+    .notes-input {
+      min-height: 70px;
+    }
+
+    .validate-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .validate-btn.is-validated {
+      background: rgba(74, 160, 80, 0.2);
+      color: #7fd89f;
+    }
+
+    .validate-btn.is-pending {
+      background: rgba(240, 165, 0, 0.2);
+      color: #ffcc66;
+    }
+
+    .validate-btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.9;
+    }
+
     /* ── Buttons ── */
     .action-btn {
       padding: 0.75rem 1.25rem;
@@ -342,6 +444,7 @@
 
     input[type="text"],
     input[type="password"],
+    input[type="number"],
     textarea,
     select {
       width: 100%;
@@ -358,6 +461,7 @@
 
     input[type="text"]:focus,
     input[type="password"]:focus,
+    input[type="number"]:focus,
     textarea:focus,
     select:focus {
       outline: none;
@@ -660,13 +764,12 @@
   <div class="container">
     <header>
       <h1>Keys<span>withOG</span></h1>
-      <p>Admin Dashboard · Manage submissions, referrals & inventory</p>
+      <p>Admin Dashboard · Manage submissions & referrals</p>
     </header>
 
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('submissions')">Submissions</button>
       <button class="tab-btn" onclick="switchTab('referrals')">Referrals</button>
-      <button class="tab-btn" onclick="switchTab('inventory')">Inventory</button>
     </div>
 
     <!-- ── Submissions Tab ── -->
@@ -696,6 +799,10 @@
           <div class="stat-label">Total Payouts</div>
         </div>
         <div class="stat-card">
+          <div class="stat-value" id="statPendingPayouts">0</div>
+          <div class="stat-label">Pending Payouts</div>
+        </div>
+        <div class="stat-card">
           <div class="stat-value" id="statAvgReferrals">0</div>
           <div class="stat-label">Avg per Person</div>
         </div>
@@ -710,50 +817,6 @@
       </div>
     </div>
 
-    <!-- ── Inventory Tab ── -->
-    <div id="inventory" class="tab-content">
-      <div class="card">
-        <h2>Vehicle Inventory</h2>
-        <p>Manage vehicle listings from AT Price Chevrolet</p>
-        <button class="action-btn sync-btn" onclick="syncInventory()" style="margin-bottom: 1.5rem;">
-          ↻ Sync from AT Price Chevrolet
-        </button>
-        <div id="syncStatus"></div>
-        <div class="table-wrapper">
-          <div id="inventoryContainer" class="loading">Loading inventory...</div>
-        </div>
-
-        <!-- ── CSV / JSON Import ── -->
-        <div class="import-section">
-          <h3>Bulk Import Vehicles</h3>
-          <p>Paste CSV or JSON data exported from the dealership DMS to create listings in bulk.</p>
-
-          <div class="import-format-tabs">
-            <button class="import-format-btn active" id="csvFormatBtn" onclick="setImportFormat('csv')">CSV</button>
-            <button class="import-format-btn" id="jsonFormatBtn" onclick="setImportFormat('json')">JSON</button>
-          </div>
-
-          <div id="csvHint" class="import-hint" style="margin-bottom:0.75rem;">
-            Expected columns: <code>vehicle_name, vehicle_type, price, tagline, highlights, image_url</code><br>
-            Separate multiple highlights with a semicolon (;). The first row must be a header row.
-          </div>
-          <div id="jsonHint" class="import-hint" style="margin-bottom:0.75rem; display:none;">
-            Paste a JSON array: <code>[{"vehicle_name":"2025 Silverado 1500","vehicle_type":"truck","price":"From $36,900","tagline":"...","highlights":["Feature 1"],"image_url":"https://..."}]</code>
-          </div>
-
-          <textarea id="importData" placeholder="Paste CSV or JSON data here…"></textarea>
-
-          <div class="import-controls">
-            <button class="action-btn" onclick="importInventory()">⬆ Import Vehicles</button>
-            <label class="checkbox-label">
-              <input type="checkbox" id="replaceAll">
-              Replace all existing inventory
-            </label>
-          </div>
-          <div id="importStatus"></div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- Modal for submission details -->
@@ -770,6 +833,7 @@
     const API_BASE = '/admin/api';
     const ADMIN_PASSWORD = new URLSearchParams(window.location.search).get('password') || '';
     const cache = new Map();
+    const referralSubmissionsCache = new Map();
     const CACHE_DURATION = 2 * 60 * 1000; // 2 minutes
 
     // Cache utilities
@@ -811,7 +875,6 @@
       // Load data with caching
       if (tab === 'submissions') loadSubmissions();
       else if (tab === 'referrals') loadReferrals();
-      else if (tab === 'inventory') loadInventory();
     }
 
     // Optimized submissions loading with error handling and caching
@@ -995,6 +1058,7 @@
         const cached = getCachedData(cacheKey);
         if (cached) {
           renderReferrals(cached, container);
+          refreshReferralStats();
           return;
         }
 
@@ -1019,6 +1083,7 @@
             totalReferrers: document.getElementById('statTotalReferrers'),
             totalReferrals: document.getElementById('statTotalReferrals'),
             totalPayouts: document.getElementById('statTotalPayouts'),
+            pendingPayouts: document.getElementById('statPendingPayouts'),
             avgReferrals: document.getElementById('statAvgReferrals')
           };
 
@@ -1030,6 +1095,7 @@
               const payouts = parseFloat(stats.total_payouts || 0);
               elements.totalPayouts.textContent = '$' + (isNaN(payouts) ? '0.00' : payouts.toFixed(2));
             }
+            if (elements.pendingPayouts) elements.pendingPayouts.textContent = stats.pending_payouts || 0;
             if (elements.avgReferrals) {
               const avgReferrals = parseFloat(stats.avg_referrals_per_person || 0);
               elements.avgReferrals.textContent = isNaN(avgReferrals) ? '0' : avgReferrals.toFixed(1);
@@ -1061,10 +1127,9 @@
         return;
       }
 
-      // Use DocumentFragment
       const fragment = document.createDocumentFragment();
       const table = document.createElement('table');
-      table.innerHTML = '<thead><tr><th>Name</th><th>Email</th><th>Code</th><th>Referrals</th><th>Payout</th><th>Created</th></tr></thead>';
+      table.innerHTML = '<thead><tr><th></th><th>Name</th><th>Email</th><th>Code</th><th>Referrals</th><th>Validated</th><th>Payout</th><th>Created</th></tr></thead>';
 
       const tbody = document.createElement('tbody');
 
@@ -1072,16 +1137,72 @@
         const row = document.createElement('tr');
         const date = new Date(ref.created_at).toLocaleDateString();
         const payout = parseFloat(ref.payout_total);
+        const submissionCount = parseInt(ref.submission_count || 0, 10) || 0;
+        const validatedCount = parseInt(ref.validated_count || 0, 10) || 0;
+        const referralCount = parseInt(ref.referral_count || 0, 10) || 0;
+        const summaryTotal = submissionCount || referralCount;
 
-        row.innerHTML = `
-          <td><strong>${ref.name}</strong></td>
-          <td>${ref.email}</td>
-          <td><code style="background: rgba(255,255,255,0.05); padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.85rem;">${ref.referral_code}</code></td>
-          <td>${ref.referral_count}</td>
-          <td><strong style="color: var(--gold);">$${isNaN(payout) ? '0.00' : payout.toFixed(2)}</strong></td>
-          <td>${date}</td>
+        const toggleCell = document.createElement('td');
+        const toggleBtn = document.createElement('button');
+        toggleBtn.type = 'button';
+        toggleBtn.className = 'referral-toggle';
+        toggleBtn.textContent = '▶';
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        toggleBtn.setAttribute('aria-label', 'Toggle referral submissions');
+        toggleCell.appendChild(toggleBtn);
+
+        const summaryBadge = document.createElement('span');
+        summaryBadge.className = 'referral-summary';
+        summaryBadge.id = `referral-summary-${ref.referral_code}`;
+        summaryBadge.dataset.total = summaryTotal;
+        summaryBadge.innerHTML = `<strong>${Math.min(validatedCount, summaryTotal)}</strong> / ${summaryTotal} validated`;
+
+        const nameCell = document.createElement('td');
+        nameCell.innerHTML = `<strong>${ref.name}</strong>`;
+
+        const emailCell = document.createElement('td');
+        emailCell.textContent = ref.email;
+
+        const codeCell = document.createElement('td');
+        codeCell.innerHTML = `<code style="background: rgba(255,255,255,0.05); padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.85rem;">${ref.referral_code}</code>`;
+
+        const referralsCell = document.createElement('td');
+        referralsCell.textContent = referralCount;
+
+        const summaryCell = document.createElement('td');
+        summaryCell.appendChild(summaryBadge);
+
+        const payoutCell = document.createElement('td');
+        payoutCell.innerHTML = `<strong style="color: var(--gold);">$${isNaN(payout) ? '0.00' : payout.toFixed(2)}</strong>`;
+
+        const createdCell = document.createElement('td');
+        createdCell.textContent = date;
+
+        row.appendChild(toggleCell);
+        row.appendChild(nameCell);
+        row.appendChild(emailCell);
+        row.appendChild(codeCell);
+        row.appendChild(referralsCell);
+        row.appendChild(summaryCell);
+        row.appendChild(payoutCell);
+        row.appendChild(createdCell);
+
+        const detailRow = document.createElement('tr');
+        detailRow.className = 'referral-submissions-row';
+        detailRow.style.display = 'none';
+        const detailCell = document.createElement('td');
+        detailCell.colSpan = 8;
+        detailCell.innerHTML = `
+          <div class="referral-submissions" id="referral-submissions-${ref.referral_code}">
+            <div class="loading" style="padding: 1.5rem; text-align: center; color: var(--muted);">Loading referred submissions...</div>
+          </div>
         `;
+        detailRow.appendChild(detailCell);
+
+        toggleBtn.addEventListener('click', () => toggleReferralSubmissions(ref.referral_code, detailRow, toggleBtn));
+
         tbody.appendChild(row);
+        tbody.appendChild(detailRow);
       });
 
       table.appendChild(tbody);
@@ -1093,10 +1214,40 @@
       });
     }
 
-    async function loadInventory() {
-      const container = document.getElementById('inventoryContainer');
+    async function toggleReferralSubmissions(referralCode, detailRow, toggleBtn) {
+      const isOpen = detailRow.style.display === 'table-row';
+      if (isOpen) {
+        detailRow.style.display = 'none';
+        toggleBtn.textContent = '▶';
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        return;
+      }
+
+      detailRow.style.display = 'table-row';
+      toggleBtn.textContent = '▼';
+      toggleBtn.setAttribute('aria-expanded', 'true');
+
+      await loadReferralSubmissions(referralCode);
+    }
+
+    async function loadReferralSubmissions(referralCode, force = false) {
+      const container = document.getElementById(`referral-submissions-${referralCode}`);
+      if (!container) return;
+
+      if (!force) {
+        const cached = referralSubmissionsCache.get(referralCode);
+        if (cached) {
+          renderReferralSubmissions(cached, container, referralCode);
+          return;
+        }
+      }
+
+      container.innerHTML = '<div class="loading" style="padding: 1.5rem; text-align: center; color: var(--muted);">Loading referred submissions...</div>';
+
       try {
-        const response = await fetch(`${API_BASE}/inventory`);
+        const response = await fetch(`${API_BASE}/referrals/${encodeURIComponent(referralCode)}/submissions`, {
+          headers: getAdminHeaders(),
+        });
         const result = await response.json();
 
         if (!result.success) {
@@ -1104,124 +1255,173 @@
           return;
         }
 
-        if (result.data.length === 0) {
-          container.innerHTML = '<div class="empty-state">No vehicles in inventory. Click "Sync from AT Price Chevrolet" to load vehicles.</div>';
-          return;
-        }
-
-        let html = '<table><thead><tr><th>Name</th><th>Type</th><th>Price</th><th>Tagline</th><th>Updated</th></tr></thead><tbody>';
-
-        result.data.forEach(vehicle => {
-          const date = new Date(vehicle.updated_at).toLocaleDateString();
-          const typeBadge = `<span class="badge badge-${vehicle.vehicle_type}">${vehicle.vehicle_type}</span>`;
-
-          html += `
-            <tr>
-              <td><strong>${vehicle.vehicle_name}</strong></td>
-              <td>${typeBadge}</td>
-              <td>${vehicle.price}</td>
-              <td>${vehicle.tagline || '—'}</td>
-              <td>${date}</td>
-            </tr>
-          `;
-        });
-
-        html += '</tbody></table>';
-        container.innerHTML = html;
+        referralSubmissionsCache.set(referralCode, result.data);
+        renderReferralSubmissions(result.data, container, referralCode);
+        updateReferralSummary(referralCode, result.data);
       } catch (error) {
-        container.innerHTML = `<div class="error">Error loading inventory: ${error.message}</div>`;
+        container.innerHTML = `<div class="error">Error loading referral submissions: ${error.message}</div>`;
       }
     }
 
-    async function syncInventory() {
-      const status = document.getElementById('syncStatus');
-      const btn = event.target;
-
-      btn.disabled = true;
-      btn.textContent = '⏳ Syncing...';
-      status.innerHTML = '';
-
-      try {
-        const response = await fetch(`${API_BASE}/inventory/sync`, {
-          method: 'POST',
-          headers: getAdminHeaders(),
-          body: JSON.stringify({ password: ADMIN_PASSWORD }),
-        });
-        const result = await response.json();
-
-        if (result.success) {
-          status.innerHTML = `<div class="success">${result.message}</div>`;
-          setTimeout(() => loadInventory(), 500);
-        } else {
-          status.innerHTML = `<div class="error">Error: ${result.error}</div>`;
-        }
-      } catch (error) {
-        status.innerHTML = `<div class="error">Error syncing inventory: ${error.message}</div>`;
-      } finally {
-        btn.disabled = false;
-        btn.textContent = '↻ Sync from AT Price Chevrolet';
-      }
-    }
-
-    // ── Import format toggle ──
-    let importFormat = 'csv';
-
-    function setImportFormat(fmt) {
-      importFormat = fmt;
-      document.getElementById('csvFormatBtn').classList.toggle('active', fmt === 'csv');
-      document.getElementById('jsonFormatBtn').classList.toggle('active', fmt === 'json');
-      document.getElementById('csvHint').style.display = fmt === 'csv' ? '' : 'none';
-      document.getElementById('jsonHint').style.display = fmt === 'json' ? '' : 'none';
-      document.getElementById('importData').placeholder =
-        fmt === 'csv'
-          ? 'vehicle_name,vehicle_type,price,tagline,highlights,image_url\n2025 Chevrolet Silverado 1500,truck,From $36900,Ready to work.,Crew Cab;4WD;V8;Tow Package,https://...'
-          : '[{"vehicle_name":"2025 Chevrolet Silverado 1500","vehicle_type":"truck","price":"From $36,900","tagline":"Ready to work.","highlights":["Crew Cab","4WD"],"image_url":"https://..."}]';
-    }
-
-    async function importInventory() {
-      const status = document.getElementById('importStatus');
-      const rawData = document.getElementById('importData').value.trim();
-      const replaceAll = document.getElementById('replaceAll').checked;
-
-      if (!rawData) {
-        status.innerHTML = '<div class="error">Please paste CSV or JSON data before importing.</div>';
+    function renderReferralSubmissions(submissions, container, referralCode) {
+      if (submissions.length === 0) {
+        container.innerHTML = '<div class="empty-state">No referred submissions yet</div>';
         return;
       }
 
-      status.innerHTML = '<div class="loading">⏳ Importing…</div>';
+      const table = document.createElement('table');
+      table.className = 'submissions-table';
+      table.innerHTML = '<thead><tr><th>Email</th><th>Submitted</th><th>Payout</th><th>Notes</th><th>Validated At</th><th>Action</th></tr></thead>';
 
-      let body;
-      if (importFormat === 'csv') {
-        body = { csv_data: rawData, replace_all: replaceAll };
-      } else {
-        let parsed;
-        try {
-          parsed = JSON.parse(rawData);
-        } catch (e) {
-          status.innerHTML = `<div class="error">Invalid JSON: ${e.message}</div>`;
-          return;
-        }
-        body = { vehicles: parsed, replace_all: replaceAll };
-      }
+      const tbody = document.createElement('tbody');
 
+      submissions.forEach(sub => {
+        const row = document.createElement('tr');
+        row.className = `submission-row ${sub.validated ? 'validated' : 'pending'}`;
+
+        const emailCell = document.createElement('td');
+        emailCell.innerHTML = `<a href="mailto:${sub.referred_email}" style="color: var(--gold); text-decoration: none;">${sub.referred_email}</a>`;
+
+        const submittedCell = document.createElement('td');
+        submittedCell.textContent = new Date(sub.submitted_at).toLocaleDateString();
+
+        const payoutCell = document.createElement('td');
+        const payoutInput = document.createElement('input');
+        payoutInput.type = 'number';
+        payoutInput.min = '0';
+        payoutInput.step = '0.01';
+        payoutInput.className = 'payout-input';
+        payoutInput.value = parseFloat(sub.payout_amount || 0).toFixed(2);
+        payoutInput.addEventListener('blur', () => updateReferralSubmissionPayout(sub.id, referralCode, payoutInput.value));
+        payoutCell.appendChild(payoutInput);
+
+        const notesCell = document.createElement('td');
+        const notesInput = document.createElement('textarea');
+        notesInput.className = 'notes-input';
+        notesInput.placeholder = 'Add payout notes...';
+        notesInput.value = sub.notes || '';
+        notesInput.addEventListener('blur', () => updateReferralSubmissionNotes(sub.id, referralCode, notesInput.value));
+        notesCell.appendChild(notesInput);
+
+        const validatedCell = document.createElement('td');
+        validatedCell.textContent = sub.validated_at ? new Date(sub.validated_at).toLocaleString() : '—';
+
+        const actionCell = document.createElement('td');
+        const toggleBtn = document.createElement('button');
+        toggleBtn.type = 'button';
+        toggleBtn.className = `validate-btn ${sub.validated ? 'is-validated' : 'is-pending'}`;
+        toggleBtn.textContent = sub.validated ? '✓' : '✗';
+        toggleBtn.title = sub.validated ? 'Mark as unvalidated' : 'Mark as validated';
+        toggleBtn.addEventListener('click', () => toggleSubmissionValidation(sub.id, referralCode, !sub.validated));
+        actionCell.appendChild(toggleBtn);
+
+        row.appendChild(emailCell);
+        row.appendChild(submittedCell);
+        row.appendChild(payoutCell);
+        row.appendChild(notesCell);
+        row.appendChild(validatedCell);
+        row.appendChild(actionCell);
+
+        tbody.appendChild(row);
+      });
+
+      table.appendChild(tbody);
+      container.innerHTML = '';
+      container.appendChild(table);
+    }
+
+    function updateReferralSummary(referralCode, submissions) {
+      const summary = document.getElementById(`referral-summary-${referralCode}`);
+      if (!summary) return;
+      const validatedCount = submissions.filter(sub => sub.validated).length;
+      const fallbackTotal = parseInt(summary.dataset.total || 0, 10) || 0;
+      const total = submissions.length || fallbackTotal;
+      summary.innerHTML = `<strong>${validatedCount}</strong> / ${total} validated`;
+    }
+
+    async function toggleSubmissionValidation(id, referralCode, shouldValidate) {
+      const endpoint = shouldValidate ? 'validate' : 'unvalidate';
       try {
-        const response = await fetch(`${API_BASE}/inventory/import`, {
+        const response = await fetch(`${API_BASE}/referral-submissions/${id}/${endpoint}`, {
           method: 'POST',
           headers: getAdminHeaders(),
-          body: JSON.stringify(body),
         });
         const result = await response.json();
 
-        if (result.success) {
-          status.innerHTML = `<div class="success">${result.message}</div>`;
-          document.getElementById('importData').value = '';
-          document.getElementById('replaceAll').checked = false;
-          setTimeout(() => loadInventory(), 500);
-        } else {
-          status.innerHTML = `<div class="error">Import error: ${result.error}</div>`;
+        if (!result.success) {
+          alert(`Error: ${result.error}`);
+          return;
+        }
+
+        referralSubmissionsCache.delete(referralCode);
+        await loadReferralSubmissions(referralCode, true);
+        refreshReferralStats();
+      } catch (error) {
+        alert('Error updating referral submission: ' + error.message);
+      }
+    }
+
+    async function updateReferralSubmissionNotes(id, referralCode, notes) {
+      await updateReferralSubmissionDetails(id, referralCode, { notes });
+    }
+
+    async function updateReferralSubmissionPayout(id, referralCode, payoutAmount) {
+      await updateReferralSubmissionDetails(id, referralCode, { payout_amount: payoutAmount });
+    }
+
+    async function updateReferralSubmissionDetails(id, referralCode, payload) {
+      try {
+        const response = await fetch(`${API_BASE}/referral-submissions/${id}/notes`, {
+          method: 'PUT',
+          headers: getAdminHeaders(),
+          body: JSON.stringify(payload),
+        });
+        const result = await response.json();
+
+        if (!result.success) {
+          alert(`Error: ${result.error}`);
+          return;
+        }
+
+        referralSubmissionsCache.delete(referralCode);
+        await loadReferralSubmissions(referralCode, true);
+        refreshReferralStats();
+      } catch (error) {
+        alert('Error updating referral submission: ' + error.message);
+      }
+    }
+
+    async function refreshReferralStats() {
+      try {
+        const response = await fetch(`${API_BASE}/referrals/stats`, {
+          headers: getAdminHeaders(),
+        });
+        const result = await response.json();
+
+        if (!result.success || !result.data) return;
+        const stats = result.data;
+
+        const elements = {
+          totalReferrers: document.getElementById('statTotalReferrers'),
+          totalReferrals: document.getElementById('statTotalReferrals'),
+          totalPayouts: document.getElementById('statTotalPayouts'),
+          pendingPayouts: document.getElementById('statPendingPayouts'),
+          avgReferrals: document.getElementById('statAvgReferrals')
+        };
+
+        if (elements.totalReferrers) elements.totalReferrers.textContent = stats.total_referrers || 0;
+        if (elements.totalReferrals) elements.totalReferrals.textContent = stats.total_referrals || 0;
+        if (elements.totalPayouts) {
+          const payouts = parseFloat(stats.total_payouts || 0);
+          elements.totalPayouts.textContent = '$' + (isNaN(payouts) ? '0.00' : payouts.toFixed(2));
+        }
+        if (elements.pendingPayouts) elements.pendingPayouts.textContent = stats.pending_payouts || 0;
+        if (elements.avgReferrals) {
+          const avgReferrals = parseFloat(stats.avg_referrals_per_person || 0);
+          elements.avgReferrals.textContent = isNaN(avgReferrals) ? '0' : avgReferrals.toFixed(1);
         }
       } catch (error) {
-        status.innerHTML = `<div class="error">Import failed: ${error.message}</div>`;
+        console.warn('Error refreshing referral stats:', error.message);
       }
     }
 
@@ -1246,10 +1446,6 @@
               e.preventDefault();
               document.querySelector('[onclick="switchTab(\'referrals\')"]').click();
               break;
-            case '3':
-              e.preventDefault();
-              document.querySelector('[onclick="switchTab(\'inventory\')"]').click();
-              break;
           }
         }
 
@@ -1271,12 +1467,12 @@
           refreshInterval = setInterval(() => {
             // Clear cache and reload current tab
             cache.clear();
+            referralSubmissionsCache.clear();
             const activeTab = document.querySelector('.tab-content.active');
             if (activeTab) {
               const tabId = activeTab.id;
               if (tabId === 'submissions') loadSubmissions();
               else if (tabId === 'referrals') loadReferrals();
-              else if (tabId === 'inventory') loadInventory();
             }
           }, 5 * 60 * 1000); // 5 minutes
         }

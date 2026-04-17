@@ -124,9 +124,13 @@
   .hero-bg { position: absolute; inset: 0; z-index: 0; background-image: url('images/oscar-hero.jpg'); background-size: cover; background-position: center 20%; }
   .hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8,8,8,0.88) 0%, rgba(8,8,8,0.72) 55%, rgba(8,8,8,0.45) 100%); }
   .hero-content { position: relative; z-index: 1; max-width: 620px; }
-  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.35); color: #fff; padding: 0.35rem 1rem; border-radius: 2px; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; margin-bottom: 1.5rem; }
-  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.5rem, 8vw, 6.5rem); line-height: 0.95; letter-spacing: 0.02em; margin-bottom: 1.5rem; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.5rem, 8vw, 6.5rem); line-height: 0.95; letter-spacing: 0.02em; margin-bottom: 1.5rem; background: linear-gradient(90deg, var(--text) 0%, var(--gold) 45%, var(--blue) 55%, var(--text) 100%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: og-shimmer 9s linear infinite; }
   .hero h1 em { color: var(--blue); font-style: normal; display: block; }
+  @keyframes og-shimmer { 0% { background-position: 150% 0; } 100% { background-position: -150% 0; } }
+  .btn-spotlight { box-shadow: 0 0 0 0 rgba(240,165,0,0.55); animation: og-pulse 2.4s ease-in-out infinite; transform-origin: center; }
+  .btn-spotlight:hover { transform: scale(1.03); }
+  @keyframes og-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(240,165,0,0.55); } 50% { box-shadow: 0 0 28px 6px rgba(240,165,0,0.35); } }
+  @media (prefers-reduced-motion: reduce) { .hero h1, .btn-spotlight { animation: none; } .hero h1 { color: var(--text); } }
   .hero p { font-size: 1.1rem; color: rgba(240,237,230,0.72); max-width: 500px; margin-bottom: 2.5rem; line-height: 1.8; }
   .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
   .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--blue); color: var(--dark); padding: 0.9rem 2rem; font-weight: 700; font-size: 1rem; border-radius: var(--radius); text-decoration: none; letter-spacing: 0.02em; border: none; cursor: pointer; transition: background 0.15s ease, transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94); will-change: background, transform; backface-visibility: hidden; }
@@ -146,9 +150,9 @@
   .card-icon { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; font-size: 1.4rem; }
   .card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
   .card p { color: var(--muted); font-size: 0.95rem; line-height: 1.65; }
-  .marquee-wrap { background: var(--blue); padding: 0.85rem 0; overflow: hidden; position: relative; }
-  .marquee-inner { display: flex; position: absolute; white-space: nowrap; }
-  .marquee-item { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.12em; color: var(--dark); padding: 0 1.5rem; flex-shrink: 0; }
+  .marquee-wrap { background: var(--blue); padding: 0.55rem 0; overflow: hidden; position: relative; display: flex; align-items: center; }
+  .marquee-inner { display: inline-flex; white-space: nowrap; }
+  .marquee-item { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; line-height: 1; letter-spacing: 0.12em; color: var(--dark); padding: 0 1.5rem; flex-shrink: 0; }
   .marquee-item::after { content: ' ★ '; color: var(--gold); margin: 0 1.5rem; }
   .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
   .why-visual { background: var(--dark2); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius); padding: 3rem 2.5rem; text-align: center; }
@@ -235,6 +239,10 @@
   .btn-full-site:hover { background: rgba(255,255,255,0.12); transform: translateY(-1px); }
   .btn-contact-oscar { background: var(--gold); color: var(--dark); border: none; cursor: pointer; }
   .btn-contact-oscar:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .embed-car-url { display: flex; flex-direction: column; gap: 0.75rem; align-items: center; margin-bottom: 1rem; }
+  .embed-car-url label { text-transform: none; letter-spacing: 0.02em; font-size: 0.85rem; color: var(--muted); }
+  .car-url-input-row { display: flex; gap: 0.75rem; width: 100%; align-items: center; justify-content: center; flex-wrap: wrap; }
+  .car-url-input { flex: 1; min-width: 240px; }
   .embed-note { color: var(--muted); font-size: 0.85rem; margin: 0; }
 
   /* ── Social Section ── */
@@ -462,6 +470,7 @@
     .social-cta-btns { justify-content: center; }
     .inventory-grid { grid-template-columns: 1fr; }
     .embed-actions { flex-direction: column; }
+    .car-url-input-row { flex-direction: column; }
     .inventory-iframe-wrapper iframe { height: 500px; }
     .popup-box { padding: 2rem 1.5rem 1.75rem; max-height: 88vh; overflow-y: auto; }
     .reels-embed-grid { grid-template-columns: 1fr; }
@@ -611,6 +620,78 @@
   </div>
 </div>
 
+<!-- ── New Visitor Modal ── -->
+<div class="popup-overlay" id="newVisitorModal" role="dialog" aria-modal="true" aria-label="Why Oscar">
+  <div class="popup-box">
+    <button class="popup-close" onclick="closeModal('newVisitorModal')" aria-label="Close">✕</button>
+    <div class="popup-screen active">
+      <div class="popup-avatar"><img src="images/og-logo.jpg" alt="Oscar Gonzalez" /></div>
+      <h2>Why <em>Oscar?</em></h2>
+      <div class="popup-divider"></div>
+      <div class="popup-features">
+        <div class="popup-feature">Works for you, not the dealership</div>
+        <div class="popup-feature">No pressure, no games — ever</div>
+        <div class="popup-feature">All credit situations welcome</div>
+        <div class="popup-feature">2,000+ cars sold &amp; counting</div>
+        <div class="popup-feature">$3K+ paid out in referral bonuses</div>
+      </div>
+      <h3 style="font-family:'Bebas Neue',sans-serif; font-size:1.25rem; letter-spacing:0.04em; margin:1.25rem 0 0.75rem; text-align:center;">What Oscar Can Do for You</h3>
+      <p style="text-align:center; color:var(--muted); font-size:0.93rem; line-height:1.7; margin-bottom:1.75rem;">New &amp; used vehicles · Trade-ins · First-time buyers · Credit rebuilds · Fast approvals</p>
+      <div class="popup-btn-group">
+        <a href="tel:12102602489" class="popup-btn-yes" style="text-decoration:none; text-align:center;">📞 Call Oscar Now</a>
+        <button class="popup-btn-no" onclick="closeModal('newVisitorModal'); setTimeout(function(){ document.getElementById('contact').scrollIntoView({behavior:'smooth'}); }, 400);">Request Info →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Returning Customer Modal ── -->
+<div class="popup-overlay" id="returningCustomerModal" role="dialog" aria-modal="true" aria-label="Welcome Back">
+  <div class="popup-box">
+    <button class="popup-close" onclick="closeModal('returningCustomerModal')" aria-label="Close">✕</button>
+    <div class="popup-screens-wrap">
+
+    <div id="rcChoice" class="popup-screen active">
+      <div class="popup-welcome-badge">★ Returning Customer</div>
+      <div class="popup-avatar"><img src="images/og-logo.jpg" alt="Oscar Gonzalez" /></div>
+      <h2>Welcome <em>Back!</em></h2>
+      <div class="popup-divider"></div>
+      <p>Great to see you again — what brings you in today?</p>
+      <div class="popup-btn-group" style="flex-direction:column;">
+        <button class="popup-btn-yes" onclick="goToReferral()">Submit a Referral →</button>
+        <button class="popup-btn-no" onclick="showRcScreen('rcBuy')">I'm looking to buy again</button>
+        <button class="popup-btn-no" onclick="showRcScreen('rcBrowse')">Just browsing</button>
+      </div>
+    </div>
+
+    <div id="rcBuy" class="popup-screen">
+      <div class="popup-avatar"><img src="images/og-logo.jpg" alt="Oscar Gonzalez" /></div>
+      <h2>Ready for <em>Round Two?</em></h2>
+      <div class="popup-divider"></div>
+      <p>Oscar's ready when you are. Want to call him directly or browse the latest inventory?</p>
+      <div class="popup-btn-group">
+        <a href="tel:12102602489" class="popup-btn-yes" style="text-decoration:none; text-align:center;">📞 Call Oscar</a>
+        <button class="popup-btn-no" onclick="closeModal('returningCustomerModal'); setTimeout(function(){ document.getElementById('inventory').scrollIntoView({behavior:'smooth'}); }, 400);">Browse Inventory →</button>
+      </div>
+      <button style="margin-top:1rem; background:none; border:none; color:var(--muted); cursor:pointer; font-size:0.88rem;" onclick="showRcScreen('rcChoice')">← Back</button>
+    </div>
+
+    <div id="rcBrowse" class="popup-screen">
+      <div class="popup-avatar"><img src="images/og-logo.jpg" alt="Oscar Gonzalez" /></div>
+      <h2>Take Your <em>Time.</em></h2>
+      <div class="popup-divider"></div>
+      <p>No rush — look around, check out the latest, and reach out whenever you're ready.</p>
+      <div class="popup-btn-group">
+        <button class="popup-btn-yes" onclick="closeModal('returningCustomerModal'); setTimeout(function(){ document.getElementById('inventory').scrollIntoView({behavior:'smooth'}); }, 400);">Browse Inventory →</button>
+        <button class="popup-btn-no" onclick="closeModal('returningCustomerModal')">Close</button>
+      </div>
+      <button style="margin-top:1rem; background:none; border:none; color:var(--muted); cursor:pointer; font-size:0.88rem;" onclick="showRcScreen('rcChoice')">← Back</button>
+    </div>
+
+    </div><!-- /popup-screens-wrap -->
+  </div>
+</div>
+
 <nav>
   <div class="nav-logo">Keys<span>withOG</span></div>
   <div class="nav-links">
@@ -651,12 +732,11 @@
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-content">
-    <div class="hero-badge">⚡ AT Price Chevrolet · Pleasanton, TX</div>
     <h1>Get Your Keys<em>with OG.</em></h1>
     <p>New &amp; used cars at the price you deserve — with a salesman who actually works for you. No pressure. No games. Just keys in your hand.</p>
     <div class="hero-actions">
-      <a href="tel:12102602489" class="btn-primary">📞 Call Oscar Now</a>
-      <a href="#contact" class="btn-outline">Request Info →</a>
+      <a href="#" class="btn-outline" onclick="openReturningPath(); return false;">I've bought from Oscar before</a>
+      <a href="#" class="btn-primary btn-spotlight" onclick="openNewVisitorPath(); return false;">First time — show me why Oscar →</a>
     </div>
     <div class="hero-stats">
       <div><div class="stat-num">2,000+</div><div class="stat-label">Cars Sold</div></div>
@@ -842,13 +922,19 @@
     </div>
 
     <div class="embed-footer">
-      <div class="embed-actions">
-        <a href="https://www.pricechevy.com/searchnew.aspx" target="_blank" class="btn-full-site">
-          🔗 Open Full Site
-        </a>
-        <button onclick="showInterest('I saw a vehicle on your inventory page')" class="btn-contact-oscar">
-          📞 Contact Oscar About Any Vehicle
-        </button>
+      <div class="embed-car-url">
+        <label for="car-url-input">Found a car you like? Paste its link here:</label>
+        <div class="car-url-input-row">
+          <input
+            type="url"
+            id="car-url-input"
+            placeholder="https://www.pricechevy.com/vdp/..."
+            class="car-url-input"
+          />
+          <button onclick="contactAboutCar()" class="btn-contact-oscar">
+            📞 Contact Oscar About This Vehicle
+          </button>
+        </div>
       </div>
       <p class="embed-note">Questions about financing, trade-ins, or availability? Oscar handles everything directly.</p>
     </div>
@@ -1458,16 +1544,32 @@ async function handleSubmit() {
   }
 }
 
-function showInterest(vehicleName) {
+function contactAboutCar() {
+  const url = document.getElementById('car-url-input').value.trim();
+  const message = url
+    ? `I'm interested in this specific vehicle: ${url}`
+    : 'I saw a vehicle on your inventory page';
+  showInterest(message);
+}
+
+function showInterest(message) {
   const select = document.getElementById('interest');
-  for (let i = 0; i < select.options.length; i++) {
-    if (select.options[i].text === vehicleName) {
-      select.selectedIndex = i;
-      break;
+  let matched = false;
+  if (select && message) {
+    for (let i = 0; i < select.options.length; i++) {
+      if (select.options[i].text === message) {
+        select.selectedIndex = i;
+        matched = true;
+        break;
+      }
     }
   }
   const msg = document.getElementById('message');
-  if (msg) msg.value = "Hi, I'm interested in the " + vehicleName + " I saw on your site.";
+  if (msg) {
+    msg.value = matched
+      ? "Hi, I'm interested in the " + message + " I saw on your site."
+      : message;
+  }
   document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
   setTimeout(() => document.getElementById('fname').focus(), 600);
 }
@@ -1476,13 +1578,6 @@ function showInterest(vehicleName) {
 let currentSlide = 0;
 const totalSlides = 2;
 
-// Show popup after 2s delay with fade-in
-setTimeout(function() {
-  const overlay = document.getElementById('welcomeOverlay');
-  if (overlay && !overlay.classList.contains('hidden')) {
-    overlay.classList.add('visible');
-  }
-}, 2000);
 
 function closePopup() {
   const overlay = document.getElementById('welcomeOverlay');
@@ -1537,14 +1632,59 @@ function updateSlide() {
   nextBtn.classList.toggle('primary', true);
 }
 
+// ── New Modal Helpers ──
+function openNewVisitorPath() {
+  const m = document.getElementById('newVisitorModal');
+  m.classList.remove('hidden');
+  setTimeout(() => m.classList.add('visible'), 10);
+}
+
+function openReturningPath() {
+  const m = document.getElementById('returningCustomerModal');
+  // Reset to first screen
+  m.querySelectorAll('.popup-screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('rcChoice').classList.add('active');
+  m.classList.remove('hidden');
+  setTimeout(() => m.classList.add('visible'), 10);
+}
+
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('visible');
+  setTimeout(() => m.classList.add('hidden'), 600);
+}
+
+function showRcScreen(screenId) {
+  const wrap = document.getElementById('returningCustomerModal');
+  wrap.querySelectorAll('.popup-screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+}
+
+function goToReferral() {
+  closeModal('returningCustomerModal');
+  setTimeout(function() {
+    document.getElementById('referral').scrollIntoView({ behavior: 'smooth' });
+  }, 650);
+}
+
 // Close on overlay click (outside the box)
 document.getElementById('welcomeOverlay').addEventListener('click', function(e) {
   if (e.target === this) closePopup();
 });
+document.getElementById('newVisitorModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal('newVisitorModal');
+});
+document.getElementById('returningCustomerModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal('returningCustomerModal');
+});
 
 // Close on Escape key
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closePopup();
+  if (e.key === 'Escape') {
+    closePopup();
+    closeModal('newVisitorModal');
+    closeModal('returningCustomerModal');
+  }
 });
 
 // ── Hamburger Menu ──

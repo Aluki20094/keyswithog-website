@@ -32,7 +32,6 @@ npm install
    DATABASE_URL=postgresql://postgres:password@localhost:5432/keys_with_og
    GMAIL_EMAIL=your-email@gmail.com
    GMAIL_PASSWORD=your-gmail-app-password
-   CLAUDE_API_KEY=sk-ant-v0-xxxxx
    ADMIN_PASSWORD=chooseAStrongPassword
    PORT=5000
    NODE_ENV=development
@@ -111,11 +110,7 @@ curl -X POST http://localhost:5000/api/generate-referral \
   }'
 ```
 
-### Test 4: Get Inventory
-
-Visit: http://localhost:5000/api/inventory
-
-### Test 5: Access Admin Dashboard
+### Test 4: Access Admin Dashboard
 
 Visit: http://localhost:5000/admin/dashboard?password=yourAdminPassword
 
@@ -126,7 +121,6 @@ Visit: http://localhost:5000/admin/dashboard?password=yourAdminPassword
 | `DATABASE_URL` | PostgreSQL connection | `postgresql://user:pass@localhost:5432/keys_with_og` |
 | `GMAIL_EMAIL` | Email to send from | `oscar@gmail.com` |
 | `GMAIL_PASSWORD` | Gmail app password | `xxxx xxxx xxxx xxxx` |
-| `CLAUDE_API_KEY` | Anthropic API key | `sk-ant-v0-xxxxx` |
 | `ADMIN_PASSWORD` | Admin dashboard password | `chooseAStrongPassword` |
 | `PORT` | Server port | `5000` |
 | `NODE_ENV` | Environment | `development` or `production` |
@@ -140,15 +134,7 @@ Once the backend is running, access the admin dashboard:
 **Features**:
 - View all contact submissions
 - See referral codes and stats
-- Manually sync inventory from AT Price Chevrolet
 - Add notes to submissions
-
-### Syncing Inventory (Important!)
-
-1. Go to Admin Dashboard
-2. Click **"🔄 Sync from AT Price Chevrolet"**
-3. Claude AI will fetch real inventory from the dealership website
-4. Inventory updates on the frontend automatically
 
 ## 🐛 Troubleshooting
 
@@ -167,10 +153,6 @@ Once the backend is running, access the admin dashboard:
 - Check CORS settings in `server.js`
 - If frontend is on different domain, update CORS origins
 
-### "Claude inventory sync not working"
-- Verify `CLAUDE_API_KEY` is correct
-- Check your Anthropic API quota
-- Claude might be having trouble accessing the dealership website (try again later)
 
 ### "Referral code generation failed"
 - Check backend is running
@@ -195,10 +177,6 @@ Your `index.html` has been updated to use the backend API:
 { first_name, last_name, email }
 ```
 
-**Inventory**: `GET /api/inventory`
-- Fetches all vehicles
-- Returns: `[ { name, type, price, tagline, highlights, image_url }, ... ]`
-
 ## 🌐 API Endpoints
 
 ### Public Endpoints (no password needed)
@@ -207,8 +185,6 @@ Your `index.html` has been updated to use the backend API:
 GET  /health                      - Health check
 POST /api/submit-contact          - Submit contact form
 POST /api/generate-referral       - Generate referral code
-GET  /api/inventory               - Get all vehicles
-GET  /api/inventory?type=truck    - Get vehicles by type
 GET  /api/referral/:code          - Get referral details
 ```
 
@@ -218,7 +194,10 @@ GET  /api/referral/:code          - Get referral details
 GET  /admin/dashboard?password=XXX         - Admin dashboard
 GET  /admin/api/submissions?password=XXX   - List submissions
 GET  /admin/api/referrals?password=XXX     - List referrals
-POST /api/sync-inventory                   - Sync inventory via Claude
+GET  /admin/api/referrals/:code/submissions - List referral submissions
+POST /admin/api/referral-submissions/:id/validate - Mark submission validated
+POST /admin/api/referral-submissions/:id/unvalidate - Mark submission unvalidated
+PUT  /admin/api/referral-submissions/:id/notes - Update submission notes/payout
 ```
 
 ## 🚢 Deployment (Later)
@@ -245,7 +224,6 @@ If you run into issues:
 Your backend is now running. The frontend will automatically:
 - Send contact form submissions to your database
 - Generate email-linked referral codes
-- Load real inventory from the dealership
 - Send confirmation emails to customers
 
 Oscar can access the admin dashboard to manage everything!

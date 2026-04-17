@@ -44,20 +44,18 @@ async function initializeDatabase() {
       );
     `);
 
-    // Create inventory table
+    // Create referral submissions table
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS inventory (
+      CREATE TABLE IF NOT EXISTS referral_submissions (
         id SERIAL PRIMARY KEY,
-        vehicle_name VARCHAR(100) NOT NULL,
-        vehicle_type VARCHAR(50),
-        description TEXT,
-        tagline VARCHAR(200),
-        highlights TEXT[],
-        price VARCHAR(50),
-        image_url VARCHAR(255),
-        created_at TIMESTAMP DEFAULT NOW(),
-        updated_at TIMESTAMP DEFAULT NOW(),
-        source VARCHAR(50)
+        referral_code VARCHAR(20) NOT NULL REFERENCES referrals(referral_code) ON DELETE CASCADE,
+        referred_email VARCHAR(100) NOT NULL,
+        submitted_at TIMESTAMP DEFAULT NOW(),
+        validated BOOLEAN DEFAULT FALSE,
+        validated_at TIMESTAMP,
+        payout_amount DECIMAL(10, 2) DEFAULT 100.00,
+        notes TEXT,
+        UNIQUE(referral_code, referred_email)
       );
     `);
 

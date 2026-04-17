@@ -1,5 +1,4 @@
 const Anthropic = require('@anthropic-ai/sdk');
-const { fetchDealershipInventory: scrapeInventory } = require('./scraper');
 require('dotenv').config();
 
 // Initialize Anthropic client
@@ -8,11 +7,10 @@ const client = new Anthropic({
 });
 
 /**
- * Fetch and parse inventory from AT Price Chevrolet website using a real HTTP scraper.
- * If the scraped vehicle lacks a tagline/description, Claude optionally enriches it.
+ * Inventory scraping has been removed in favor of the embedded dealership iframe.
  */
 async function fetchDealershipInventory() {
-  return scrapeInventory();
+  throw new Error('Inventory scraping is no longer supported.');
 }
 
 /**
