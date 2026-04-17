@@ -1396,17 +1396,8 @@
         referralSubmissionsCache.delete(referralCode);
         await loadReferralSubmissions(referralCode, true);
         refreshReferralStats();
-      const normalizedPayoutAmount =
-        typeof payoutAmount === 'string' ? payoutAmount.trim() : payoutAmount;
-      const parsedPayoutAmount = Number(normalizedPayoutAmount);
-
-      if (!Number.isFinite(parsedPayoutAmount)) {
-        alert('Please enter a valid payout amount.');
-        return;
-      }
-
-      await updateReferralSubmissionDetails(id, referralCode, { payout_amount: parsedPayoutAmount });
-        alert('Error updating referral submission: ' + error.message);
+      } catch (error) {
+        alert('Error updating referral validation: ' + error.message);
       }
     }
 
