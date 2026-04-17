@@ -27,6 +27,8 @@ app.use(cors({
     'https://keyswithog.com',
     'https://darkgreen-cassowary-344122.hostingersite.com',
     'http://darkgreen-cassowary-344122.hostingersite.com',
+    'https://api.keyswithog.com', // New Hostinger backend domain
+    'http://api.keyswithog.com',  // HTTP fallback for local testing
   ],
   credentials: true,
 }));
