@@ -830,7 +830,12 @@
 
   <script>
     // ── Performance & Caching ──
-    const API_BASE = '/admin/api';
+    // Always target the deployed backend API so admin data loads even if this file
+    // is accessed from a different host (cached/static copy).
+    const BACKEND_ORIGIN = (window.location.origin.includes('hotpink-shrew-647765.hostingersite.com') || window.location.origin.includes('api.keyswithog.com'))
+      ? window.location.origin
+      : 'https://hotpink-shrew-647765.hostingersite.com';
+    const API_BASE = `${BACKEND_ORIGIN}/admin/api`;
     const ADMIN_PASSWORD = new URLSearchParams(window.location.search).get('password') || '';
     const cache = new Map();
     const referralSubmissionsCache = new Map();
@@ -855,6 +860,16 @@
         'Content-Type': 'application/json',
         'X-Admin-Password': ADMIN_PASSWORD,
       };
+    }
+
+    async function parseAdminJson(response) {
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        return response.json();
+      }
+      const bodyText = await response.text();
+      const snippet = (bodyText || '').replace(/\s+/g, ' ').slice(0, 120);
+      throw new Error(`Unexpected ${response.status} response from server (${snippet || 'non-JSON body'})`);
     }
 
     // Optimized tab switching with animation
@@ -907,7 +922,7 @@
         });
 
         clearTimeout(timeoutId);
-        const result = await response.json();
+        const result = await parseAdminJson(response);
 
         if (!result.success) {
           container.innerHTML = `<div class="error">${result.error}</div>`;
@@ -976,7 +991,7 @@
         const response = await fetch(`${API_BASE}/submissions/${id}`, {
           headers: getAdminHeaders(),
         });
-        const result = await response.json();
+        const result = await parseAdminJson(response);
 
         const sub = result.data;
         const date = new Date(sub.created_at).toLocaleString();
@@ -1039,7 +1054,7 @@
           headers: getAdminHeaders(),
           body: JSON.stringify({ notes }),
         });
-        const result = await response.json();
+        const result = await parseAdminJson(response);
 
         if (result.success) {
           alert('Notes saved!');
