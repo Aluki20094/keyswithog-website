@@ -490,9 +490,103 @@
       margin-bottom: 0.75rem;
     }
 
-    /* ── Sync Status ── */
-    #syncStatus {
+    /* ── Sync / Import Status ── */
+    #syncStatus, #importStatus {
       margin: 1.5rem 0;
+    }
+
+    /* ── Import section ── */
+    .import-section {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .import-section h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
+
+    .import-section p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .import-section textarea {
+      width: 100%;
+      min-height: 160px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: 'DM Sans', monospace;
+      font-size: 0.85rem;
+      padding: 0.875rem 1rem;
+      resize: vertical;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+
+    .import-section textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .import-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .import-controls label.checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .import-controls input[type="checkbox"] {
+      accent-color: var(--gold);
+      width: 1rem;
+      height: 1rem;
+      cursor: pointer;
+    }
+
+    .import-format-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .import-format-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .import-format-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(201,168,76,0.08);
+    }
+
+    .import-hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
     }
 
     /* ── Responsive ── */
@@ -627,6 +721,36 @@
         <div id="syncStatus"></div>
         <div class="table-wrapper">
           <div id="inventoryContainer" class="loading">Loading inventory...</div>
+        </div>
+
+        <!-- ── CSV / JSON Import ── -->
+        <div class="import-section">
+          <h3>Bulk Import Vehicles</h3>
+          <p>Paste CSV or JSON data exported from the dealership DMS to create listings in bulk.</p>
+
+          <div class="import-format-tabs">
+            <button class="import-format-btn active" id="csvFormatBtn" onclick="setImportFormat('csv')">CSV</button>
+            <button class="import-format-btn" id="jsonFormatBtn" onclick="setImportFormat('json')">JSON</button>
+          </div>
+
+          <div id="csvHint" class="import-hint" style="margin-bottom:0.75rem;">
+            Expected columns: <code>vehicle_name, vehicle_type, price, tagline, highlights, image_url</code><br>
+            Separate multiple highlights with a semicolon (;). The first row must be a header row.
+          </div>
+          <div id="jsonHint" class="import-hint" style="margin-bottom:0.75rem; display:none;">
+            Paste a JSON array: <code>[{"vehicle_name":"2025 Silverado 1500","vehicle_type":"truck","price":"From $36,900","tagline":"...","highlights":["Feature 1"],"image_url":"https://..."}]</code>
+          </div>
+
+          <textarea id="importData" placeholder="Paste CSV or JSON data here…"></textarea>
+
+          <div class="import-controls">
+            <button class="action-btn" onclick="importInventory()">⬆ Import Vehicles</button>
+            <label class="checkbox-label">
+              <input type="checkbox" id="replaceAll">
+              Replace all existing inventory
+            </label>
+          </div>
+          <div id="importStatus"></div>
         </div>
       </div>
     </div>
@@ -1036,6 +1160,68 @@
       } finally {
         btn.disabled = false;
         btn.textContent = '↻ Sync from AT Price Chevrolet';
+      }
+    }
+
+    // ── Import format toggle ──
+    let importFormat = 'csv';
+
+    function setImportFormat(fmt) {
+      importFormat = fmt;
+      document.getElementById('csvFormatBtn').classList.toggle('active', fmt === 'csv');
+      document.getElementById('jsonFormatBtn').classList.toggle('active', fmt === 'json');
+      document.getElementById('csvHint').style.display = fmt === 'csv' ? '' : 'none';
+      document.getElementById('jsonHint').style.display = fmt === 'json' ? '' : 'none';
+      document.getElementById('importData').placeholder =
+        fmt === 'csv'
+          ? 'vehicle_name,vehicle_type,price,tagline,highlights,image_url\n2025 Chevrolet Silverado 1500,truck,From $36900,Ready to work.,Crew Cab;4WD;V8;Tow Package,https://...'
+          : '[{"vehicle_name":"2025 Chevrolet Silverado 1500","vehicle_type":"truck","price":"From $36,900","tagline":"Ready to work.","highlights":["Crew Cab","4WD"],"image_url":"https://..."}]';
+    }
+
+    async function importInventory() {
+      const status = document.getElementById('importStatus');
+      const rawData = document.getElementById('importData').value.trim();
+      const replaceAll = document.getElementById('replaceAll').checked;
+
+      if (!rawData) {
+        status.innerHTML = '<div class="error">Please paste CSV or JSON data before importing.</div>';
+        return;
+      }
+
+      status.innerHTML = '<div class="loading">⏳ Importing…</div>';
+
+      let body;
+      if (importFormat === 'csv') {
+        body = { csv_data: rawData, replace_all: replaceAll };
+      } else {
+        let parsed;
+        try {
+          parsed = JSON.parse(rawData);
+        } catch (e) {
+          status.innerHTML = `<div class="error">Invalid JSON: ${e.message}</div>`;
+          return;
+        }
+        body = { vehicles: parsed, replace_all: replaceAll };
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/inventory/import`, {
+          method: 'POST',
+          headers: getAdminHeaders(),
+          body: JSON.stringify(body),
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          status.innerHTML = `<div class="success">${result.message}</div>`;
+          document.getElementById('importData').value = '';
+          document.getElementById('replaceAll').checked = false;
+          setTimeout(() => loadInventory(), 500);
+        } else {
+          status.innerHTML = `<div class="error">Import error: ${result.error}</div>`;
+        }
+      } catch (error) {
+        status.innerHTML = `<div class="error">Import failed: ${error.message}</div>`;
       }
     }
 
