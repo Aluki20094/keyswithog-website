@@ -858,10 +858,14 @@
     }
 
     // Optimized tab switching with animation
-    function switchTab(tab) {
+    function switchTab(tab, evt) {
       // Early return if already active
       const targetTab = document.getElementById(tab);
+      if (!targetTab) return;
       if (targetTab.classList.contains('active')) return;
+
+      // Determine the button that triggered this (fallback safe lookup)
+      const triggerBtn = evt && (evt.currentTarget || evt.target) ? (evt.currentTarget || evt.target) : document.querySelector(`.tab-btn[onclick*="${tab}"]`);
 
       // Batch DOM updates
       requestAnimationFrame(() => {
@@ -869,7 +873,7 @@
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
 
         targetTab.classList.add('active');
-        event.target.classList.add('active');
+        if (triggerBtn) triggerBtn.classList.add('active');
       });
 
       // Load data with caching
