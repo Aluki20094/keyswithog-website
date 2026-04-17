@@ -83,11 +83,11 @@ nano .env
 #### 4.2 Verify Environment Variables
 Ensure your `.env` file contains:
 ```env
-DATABASE_URL=postgresql://neondb_owner:npg_A80txjrVaOEW@ep-old-hall-amtpc1s2-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require
-GMAIL_EMAIL=test@mailtrap.io
-GMAIL_PASSWORD=945184438130bb
-CLAUDE_API_KEY=sk-ant-api03-7fn86pNtm5PUiDjNlA24IjmNT3BlbkFJSNdSgvLGn5CwAA
-ADMIN_PASSWORD=1234
+DATABASE_URL=postgresql://username:password@your-neon-db-url/dbname?sslmode=require
+GMAIL_EMAIL=your-email@gmail.com
+GMAIL_PASSWORD=your-app-password
+CLAUDE_API_KEY=your-claude-api-key-here
+ADMIN_PASSWORD=your-secure-admin-password
 NODE_ENV=production
 PORT=3000
 ```
