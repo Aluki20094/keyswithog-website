@@ -1296,15 +1296,32 @@
         payoutInput.step = '0.01';
         payoutInput.className = 'payout-input';
         payoutInput.value = parseFloat(sub.payout_amount || 0).toFixed(2);
-        payoutInput.addEventListener('blur', () => {
+        payoutInput.addEventListener('blur', async () => {
           const payoutValue = Number.parseFloat(payoutInput.value);
 
           if (!Number.isFinite(payoutValue) || payoutValue < 0) {
             payoutInput.value = parseFloat(sub.payout_amount || 0).toFixed(2);
-        const initialNotesValue = sub.notes || '';
+            return;
+          }
+
+          // Persist payout change
+          try {
+            await updateReferralSubmissionDetails(sub.id, referralCode, { payout_amount: payoutValue });
+            // refresh cache and UI
+            referralSubmissionsCache.delete(referralCode);
+            await loadReferralSubmissions(referralCode, true);
+            refreshReferralStats();
+          } catch (err) {
+            alert('Error updating payout: ' + err.message);
+          }
+        });
+        payoutCell.appendChild(payoutInput);
+
+        const notesCell = document.createElement('td');
+        const notesInput = document.createElement('textarea');
         notesInput.className = 'notes-input';
         notesInput.placeholder = 'Add payout notes...';
-        notesInput.value = initialNotesValue;
+        notesInput.value = sub.notes || '';
 
         const saveNotesBtn = document.createElement('button');
         saveNotesBtn.type = 'button';
@@ -1313,27 +1330,28 @@
         saveNotesBtn.disabled = true;
         saveNotesBtn.style.marginTop = '8px';
 
-        let lastSavedNotesValue = initialNotesValue;
+        let lastSavedNotesValue = notesInput.value;
         const syncSaveNotesState = () => {
           saveNotesBtn.disabled = notesInput.value === lastSavedNotesValue;
         };
 
         notesInput.addEventListener('input', syncSaveNotesState);
         saveNotesBtn.addEventListener('click', async () => {
-          if (notesInput.value === lastSavedNotesValue) {
-            return;
-          }
-
+          if (notesInput.value === lastSavedNotesValue) return;
           saveNotesBtn.disabled = true;
-          await updateReferralSubmissionNotes(sub.id, referralCode, notesInput.value);
-          lastSavedNotesValue = notesInput.value;
-          syncSaveNotesState();
+          try {
+            await updateReferralSubmissionNotes(sub.id, referralCode, notesInput.value);
+            lastSavedNotesValue = notesInput.value;
+            syncSaveNotesState();
+          } catch (err) {
+            alert('Error saving notes: ' + err.message);
+          } finally {
+            saveNotesBtn.disabled = false;
+          }
         });
 
         notesCell.appendChild(notesInput);
         notesCell.appendChild(saveNotesBtn);
-        });
-        payoutCell.appendChild(payoutInput);
 
         const notesCell = document.createElement('td');
         const notesInput = document.createElement('textarea');
