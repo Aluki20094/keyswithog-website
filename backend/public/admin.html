@@ -1353,14 +1353,6 @@
         notesCell.appendChild(notesInput);
         notesCell.appendChild(saveNotesBtn);
 
-        const notesCell = document.createElement('td');
-        const notesInput = document.createElement('textarea');
-        notesInput.className = 'notes-input';
-        notesInput.placeholder = 'Add payout notes...';
-        notesInput.value = sub.notes || '';
-        notesInput.addEventListener('blur', () => updateReferralSubmissionNotes(sub.id, referralCode, notesInput.value));
-        notesCell.appendChild(notesInput);
-
         const validatedCell = document.createElement('td');
         validatedCell.textContent = sub.validated_at ? new Date(sub.validated_at).toLocaleString() : '—';
 
